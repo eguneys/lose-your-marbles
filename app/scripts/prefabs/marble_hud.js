@@ -119,12 +119,13 @@ define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number',
         marble.kill();
 
         this.popNumber.alpha = 1;
-        this.popCountdown(counter + 5);
+        this.popCountdown(counter);
     };
 
     MarbleCounter.prototype.popCountdown = function(count) {
         if (count <= 0) {
             this.popNumber.alpha = 0;
+            return;
         }
         this.popNumber.pop(count);
         
