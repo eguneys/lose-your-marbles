@@ -16,6 +16,7 @@ define(['phaser', 'prefabs/red_number'], function(Phaser, RedNumber) {
     PopNumber.prototype.constructor = PopNumber;
     
     PopNumber.prototype.pop = function(number) {
+        this.number.reset(0, 0);
         this.number.show(number + '');
         this.popFx.x = this.number.x + this.number.width / 2;
         this.popFx.y = this.number.y + this.number.height / 2;
