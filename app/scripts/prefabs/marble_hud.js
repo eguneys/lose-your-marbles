@@ -58,7 +58,7 @@ define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number',
         this.popPos = popPos;
 
         
-        this.bounceMarble = new BounceMarble(this.game, this);        
+        this.bounceMarble = new BounceMarble(this.game, this);
         this.marble = this.buildMarble(color);
         this.times = this.create(0, this.marble.height, 'marbleatlas', 'COMMON01_TEXT_TIMES');
         this.number = new BlueNumber(this.game, this);
@@ -102,9 +102,13 @@ define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number',
         var tween = this.bounceMarble.tweenBounce(this.marble, this.popPos.x, this.popPos.y);
         tween.onComplete.add(this.marblePop.bind(this, this.marble, this.counter));
         
+        this.marble.animations.play('upfull');
+        
         this.marble = this.buildMarble(color);
+        this.marble.animations.stop();
         this.marble.reset(0, 0);
-
+        this.marble.setRow(7);
+        
         this.counter = 1;
         this.number.show(this.counter);
         

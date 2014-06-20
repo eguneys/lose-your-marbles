@@ -34,6 +34,7 @@ define(['phaser'], function(Phaser) {
                             [13, 14, 15, 12].mapConcat(this.preFrame), this.frameRate);
         this.animations.add('pof',
                             [1, 2, 3, 4, 5, 6].mapConcat(pofFrame));
+        this.animations.add('upfull', [1,2,3,4,5,6,7,8,9,10,11,12].mapConcat(this.preFrame), this.frameRate, true);
 
         this.setRow(row);
 
