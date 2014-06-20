@@ -63,18 +63,19 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
     MarbleGroup.prototype.initMarbles = function() {
         for (var i = 5; i<10; i++) {
             for (var j = 0; j < this.columns; j++) {
-                this.addMarble(i, j, this.game.rnd.pick([
-                    Marble.Color.GREEN,
-                    Marble.Color.YELLOW,
-                    Marble.Color.BLACK,
-                    Marble.Color.RED,
-                    Marble.Color.BLUE
-                ]));
+                this.addMarble(i, j);
             }
         }
     };
 
     MarbleGroup.prototype.buildMarble = function(color) {
+        color = color || this.game.rnd.pick([
+            Marble.Color.GREEN,
+            Marble.Color.YELLOW,
+            Marble.Color.BLACK,
+            Marble.Color.RED,
+            Marble.Color.BLUE
+        ]);
         var marble;
         
         this.marbleLayer.forEachDead(function(item) {
@@ -112,9 +113,33 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         return marble;
     };
 
-    MarbleGroup.prototype.addMarbleDropping = function(color) {
+    MarbleGroup.prototype.dropMarblesNoAnim = function(count, color) {
         var dropColumn = this.marbleLeastLengthColumn();
+
+        for (var i = 0; i < count; i++) {
+            this.fillMarblesInColumn((dropColumn + i) % this.columns);
+        }        
+    };
+
+    MarbleGroup.prototype.dropMarbles = function(count, color) {
+        count = count || 1;
+        color = color || this.game.rnd.pick([
+            Marble.Color.GREEN,
+            Marble.Color.YELLOW,
+            Marble.Color.BLACK,
+            Marble.Color.RED,
+            Marble.Color.BLUE
+        ]);
         
+        var dropColumn = this.marbleLeastLengthColumn();
+
+        for (var i = 0; i < count; i++) {
+            this.addMarbleDropping(color, (dropColumn + i) % this.columns);
+        }
+        
+    };
+    
+    MarbleGroup.prototype.addMarbleDropping = function(color, dropColumn) {
         var marble = this.buildMarble(color);
 
         var row, tween;
@@ -391,13 +416,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         } else {
             row = this.marbleColumnTopRow(column) - 1;
         }
-        this.addMarble(row, column, this.game.rnd.pick([
-            Marble.Color.GREEN,
-            Marble.Color.YELLOW,
-            Marble.Color.BLACK,
-            Marble.Color.RED,
-            Marble.Color.BLUE
-        ]));
+        this.addMarble(row, column);
     };
 
     MarbleGroup.prototype.dropMarblesEventChainStart = function(streak) {

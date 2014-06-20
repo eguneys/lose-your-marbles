@@ -54,7 +54,7 @@ define(['phaser'], function(Phaser) {
 
     RedNumber.prototype.tweenCounterPos = function(x, y) {
         return this.game.add.tween(this).
-            to({ x: x, y: y }, 625, Phaser.Easing.Linear.None, true);
+            to({ x: x, y: y }, 1000, Phaser.Easing.Linear.None, true);
     };
     
     return RedNumber;
