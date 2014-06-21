@@ -16,7 +16,6 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         this.matchInfo[MarbleMatch.Player.ONE] = p1Info;
 
         var p1 = new MarbleGroup(this.game, this);
-
         p1.onMarbleMatched.add(this.marbleMatched.bind(this, MarbleMatch.Player.ONE));
 
         this.marbles[MarbleMatch.Player.ONE] = p1;
@@ -43,6 +42,10 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
 
         this.hud[MarbleMatch.Player.ONE] = p1Hud;
 
+        var p2Hud = new MarbleHud(this.game, this, p2Info.matchColor, p2.height, -hudDiff);
+        p2Hud.x = p2Info.pos.x - Marble.WIDTH * 2;
+        p2Hud.onMarblePop.add(this.marblePop.bind(this, MarbleMatch.Player.TWO));
+        this.hud[MarbleMatch.Player.TWO] = p2Hud;
     }
 
     MarbleMatch.prototype = Object.create(Phaser.Group.prototype);
