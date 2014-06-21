@@ -31,7 +31,7 @@ define(['phaser'], function(Phaser) {
         return tweenFollow;
     };
 
-    BounceMarble.prototype.marbleBounce = function(follow, marble, physics, value) {
+    BounceMarble.prototype.marbleBounce = function(follow, marble, physics) {
 
         physics.update();
 
@@ -75,7 +75,7 @@ define(['phaser'], function(Phaser) {
         
         Object.defineProperty(this, 'zX', {
             get: function() { return  - this.z * Math.sin(this.angle); }
-        });  
+        });
         Object.defineProperty(this, 'zY', {
             get: function() { return this.z * Math.cos(this.angle); }
         });

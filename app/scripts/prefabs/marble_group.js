@@ -117,8 +117,8 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         var dropColumn = this.marbleLeastLengthColumn();
 
         for (var i = 0; i < count; i++) {
-            this.fillMarblesInColumn((dropColumn + i) % this.columns);
-        }        
+            this.fillMarblesInColumn((dropColumn + i) % this.columns, color);
+        }
     };
 
     MarbleGroup.prototype.dropMarbles = function(count, color) {
@@ -363,7 +363,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
 
                 
                 if (this.marbleColumnLength(i) < MarbleGroup.ROW_MIN) {
-                    tween.onComplete.add(this.fillMarblesInColumn.bind(this, i), this);
+                    tween.onComplete.add(this.fillMarblesInColumn.bind(this, i, null));
                 }
 
             }
@@ -409,14 +409,14 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         return tween;
     };
 
-    MarbleGroup.prototype.fillMarblesInColumn = function(column) {
+    MarbleGroup.prototype.fillMarblesInColumn = function(column, color) {
         var row;
         if (this.marbleColumnTopTaller(column)) {
             row = this.marbleColumnBottomRow(column) + 1;
         } else {
             row = this.marbleColumnTopRow(column) - 1;
         }
-        this.addMarble(row, column);
+        this.addMarble(row, column, color);
     };
 
     MarbleGroup.prototype.dropMarblesEventChainStart = function(streak) {

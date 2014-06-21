@@ -93,7 +93,9 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
        
     MarbleMatch.prototype.marblePop = function(player, count) {
         var opponent = (player + 1) % 2;
-
+        
+        count = count;
+        
         this.marbles[opponent].dropMarbles(3);
     };
 
