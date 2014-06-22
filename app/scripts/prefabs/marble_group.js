@@ -29,6 +29,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
 
 
         this.onMarbleMatched = new Phaser.Signal();
+        this.onMarbleFull = new Phaser.Signal();
     }
 
     MarbleGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -116,6 +117,11 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
     MarbleGroup.prototype.dropMarblesNoAnim = function(count, color) {
         var dropColumn = this.marbleLeastLengthColumn();
 
+        if (this.isFull(dropColumn)) {
+            this.onMarbleFull.dispatch(dropColumn);
+            return;
+        }
+        
         for (var i = 0; i < count; i++) {
             this.fillMarblesInColumn((dropColumn + i) % this.columns, color);
         }
@@ -133,10 +139,14 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         
         var dropColumn = this.marbleLeastLengthColumn();
 
+        // can't check full here
+        // because
+        // this fills the rows after drop tween
+        // full check is delegated to checkcollision
+        
         for (var i = 0; i < count; i++) {
             this.addMarbleDropping(color, (dropColumn + i) % this.columns);
         }
-        
     };
     
     MarbleGroup.prototype.addMarbleDropping = function(color, dropColumn) {
@@ -187,12 +197,19 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         
         //if (marble.overlap(this.getMarble(row, col))) {
         if (marble.calculateOverlap(this.getMarble(row, col))) {
-            var resolveOffset = (Marble.HEIGHT) * direction;
-            marble.y = this.getMarble(row, col).y + resolveOffset;
-            
+
             tween.stop();
             // stop dispatching marbleContinueFall event
             tween.onComplete.removeAll();
+            
+            // check for full
+            if (this.isFull(col)) {
+                this.onMarbleFull.dispatch(col);
+                return;
+            }
+            
+            var resolveOffset = (Marble.HEIGHT) * direction;
+            marble.y = this.getMarble(row, col).y + resolveOffset;
             
             this.placeMarble(marble, row + direction, col);
             marble.syncMarble(row + direction, this.getMarble(row, col));
@@ -475,9 +492,10 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
     };
 
     MarbleGroup.prototype.marbleLeastLengthColumn = function() {
-        var least = 0;
+        var least = this.columns - 1;
 
-        for (var i = 0; i < this.columns; i++) {
+        // start from top, this affects where marbles accumulate most
+        for (var i = least; i >= 0; i--) {
             var cleast = Math.min(this.marbleEdges[least].top, this.marbleEdges[least].bottom);
             var ileast = Math.min(this.marbleEdges[i].top, this.marbleEdges[i].bottom);
 
@@ -497,6 +515,10 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
 
     MarbleGroup.prototype.marbleColumnBottomRow = function(col) {
         return this.center + this.marbleEdges[col].bottom - 1;
+    };
+
+    MarbleGroup.prototype.isFull = function(col) {
+        return this.marbleColumnLength(col) >= this.rows;
     };
 
     MarbleGroup.prototype.queryGameState = function() {

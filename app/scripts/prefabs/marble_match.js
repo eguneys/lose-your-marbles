@@ -17,6 +17,7 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
 
         var p1 = new MarbleGroup(this.game, this);
         p1.onMarbleMatched.add(this.marbleMatched.bind(this, MarbleMatch.Player.ONE));
+        p1.onMarbleFull.add(this.marbleFull.bind(this, MarbleMatch.Player.ONE));
 
         this.marbles[MarbleMatch.Player.ONE] = p1;
 
@@ -31,7 +32,8 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         p2.x = p2Info.pos.x;
         p2.y = p2Info.pos.y;
         p2.onMarbleMatched.add(this.marbleMatched.bind(this, MarbleMatch.Player.TWO));
-
+        p2.onMarbleFull.add(this.marbleFull.bind(this, MarbleMatch.Player.TWO));
+        
         this.marbles[MarbleMatch.Player.TWO] = p2;
 
         var hudDiff = p2Info.pos.x - (p1Info.pos.x + p1.width) - 50;
@@ -46,6 +48,8 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         p2Hud.x = p2Info.pos.x - Marble.WIDTH * 2;
         p2Hud.onMarblePop.add(this.marblePop.bind(this, MarbleMatch.Player.TWO));
         this.hud[MarbleMatch.Player.TWO] = p2Hud;
+
+        this.onMatchEnd = new Phaser.Signal();
     }
 
     MarbleMatch.prototype = Object.create(Phaser.Group.prototype);
@@ -59,6 +63,10 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
     MarbleMatch.prototype.matchStart = function() {
         this.marbles[MarbleMatch.Player.ONE].initMarbles();
         this.marbles[MarbleMatch.Player.TWO].initMarbles();
+    };
+
+    MarbleMatch.prototype.marbleFull = function(player) {
+        this.onMatchEnd.dispatch(player);
     };
     
     MarbleMatch.prototype.marbleMatched = function(player, color, count, streak) {

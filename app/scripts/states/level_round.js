@@ -12,6 +12,8 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
             this.match = new MarbleMatch(this.game);
             this.match.x = 53;
             this.match.y = 20;
+
+            this.match.onMatchEnd.add(this.roundEnd);
             
             this.match.alpha = 0;
             
@@ -46,6 +48,10 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
             this.botAI.leftPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.LEFT));
             this.botAI.rightPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.RIGHT));
             this.botAI.shiftPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.SHIFT));
+        },
+
+        roundEnd: function(player) {
+            console.log(player);
         },
     };
 

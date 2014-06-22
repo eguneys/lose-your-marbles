@@ -21,7 +21,7 @@ define(['phaser', 'bot/quick_strat', 'prefabs/marble'], function(Phaser, QuickSt
     };
 
     QuickRandomStrat.prototype.pick = function(arr) {
-        return arr[Math.floor(Math.random() * (arr.length - 1))];
+        return arr[Math.floor(Math.random() * arr.length)];
     };
 
     return QuickRandomStrat;
