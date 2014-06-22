@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/marble_match', 'bot_ai'], function(Phaser, RoundForeground, MarbleGroup, MarbleMatch, BotAI) {
+define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai'], function(Phaser, RoundForeground, MarbleGroup, MarbleMatch, BotAI) {
     function LevelRoundState() {}
 
     LevelRoundState.prototype = {
