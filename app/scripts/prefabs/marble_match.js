@@ -105,6 +105,16 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
     MarbleMatch.prototype.handleInput = function(player, input) {
         this.marbles[player].handleInput(input);
     };
+
+    MarbleMatch.prototype.queryGameState = function(player) {
+        if (this.marbles[player].allowInput) {
+            var state =  this.marbles[player].queryGameState();
+            state.matchColor = this.matchInfo[player].matchColor;
+            return state;
+        }
+        
+        return null;
+    };
     
     return MarbleMatch;
 });

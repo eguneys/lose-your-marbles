@@ -498,6 +498,16 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
     MarbleGroup.prototype.marbleColumnBottomRow = function(col) {
         return this.center + this.marbleEdges[col].bottom - 1;
     };
+
+    MarbleGroup.prototype.queryGameState = function() {
+        return {
+            marbles: this.marbles.map(function (r) { return r.map(function(i) { return i?i.marbleColor:-1; }); } ),
+            cursor: this.cursorIdx,
+            rows: this.rows,
+            columns: this.columns,
+            edges: this.marbleEdges.slice()
+        };
+    };
     
     return MarbleGroup;
 });

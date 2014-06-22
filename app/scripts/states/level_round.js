@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/marble_match'], function(Phaser, RoundForeground, MarbleGroup, MarbleMatch) {
+define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/marble_match', 'bot_ai'], function(Phaser, RoundForeground, MarbleGroup, MarbleMatch, BotAI) {
     function LevelRoundState() {}
 
     LevelRoundState.prototype = {
@@ -22,6 +22,12 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
             this.shiftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
             
             this.foreground.startCountdown(this.roundStart ,this);
+
+            this.botAI = new BotAI();
+        },
+
+        update: function() {
+            this.botAI.update(this.match.queryGameState(MarbleMatch.Player.TWO));
         },
         
         roundStart: function() {
@@ -34,6 +40,12 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
             this.leftKey.onDown.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.LEFT));
             this.rightKey.onDown.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.RIGHT));
             this.shiftKey.onDown.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.SHIFT));
+
+            this.botAI.upPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.UP));
+            this.botAI.downPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.DOWN));
+            this.botAI.leftPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.LEFT));
+            this.botAI.rightPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.RIGHT));
+            this.botAI.shiftPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.SHIFT));
         },
     };
 
