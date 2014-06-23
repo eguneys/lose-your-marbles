@@ -65,11 +65,25 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         this.marbles[MarbleMatch.Player.TWO].initMarbles();
     };
 
-    MarbleMatch.prototype.marbleFull = function(player) {
-        this.onMatchEnd.dispatch(player);
+    MarbleMatch.prototype.matchEnd = function() {
+        this.marbles[MarbleMatch.Player.ONE].stopHandleInput();
+        this.marbles[MarbleMatch.Player.TWO].stopHandleInput();
+    };
+
+    MarbleMatch.prototype.marbleFull = function(loser) {
+        this.matchEnd();
+
+        var tween = this.tweenMatchEnd(loser);
+
+        this.game.time.events.add(2000, function() {
+            this.onMatchEnd.dispatch(loser);
+        }, this);
     };
     
     MarbleMatch.prototype.marbleMatched = function(player, color, count, streak) {
+        this.marbleFull(player);
+        return;
+        
         var opponent = (player + 1) % 2;
 
         if (color === this.matchInfo[player].matchColor) {
@@ -122,6 +136,36 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         }
         
         return null;
+    };
+
+    MarbleMatch.prototype.tweenMatchEnd = function(loser) {
+        var winner = (loser + 1) % 2;
+        var Y = 100;
+        var winX = this.matchInfo[winner].pos.x;
+        var loseX = this.matchInfo[loser].pos.x;
+
+        this.winS = this.create(winX, Y, 'marbleatlas', 'COMMON03_TEXT_WIN');
+        this.loseS = this.create(loseX, Y, 'marbleatlas', 'COMMON03_TEXT_LOSE');
+
+        var obj = { angle: 2 * Math.PI };
+        var tweenCircle = this.game.add.tween(obj)
+            .to({ angle: 0 }, 500, Phaser.Easing.Linear.None, true, 0, Number.MAX_VALUE);
+
+        tweenCircle.onUpdateCallback(this.winCircleTweenUpdate.bind(this, winX, loseX, Y, obj));
+
+        return tweenCircle;
+    };
+
+    MarbleMatch.prototype.winCircleTweenUpdate = function(winX, loseX, Y, obj) {
+        var r = 5;
+        var cX = Math.cos(obj.angle) * r;
+        var cY = Math.sin(obj.angle) * r;
+        
+        this.winS.x = winX + cX;
+        this.winS.y = Y + cY;
+
+        this.loseS.x = loseX + cX;
+        this.loseS.y = Y + cY;
     };
     
     return MarbleMatch;

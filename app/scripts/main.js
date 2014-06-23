@@ -18,6 +18,7 @@ require.config({
         bootstrap: '../bower_components/bootstrap/dist/js/bootstrap',
         phaser: '../bower_components/phaser-official/build/custom/phaser-arcade-physics',
         requirejs: '../bower_components/requirejs/require',
+        //'phaser': '../bower_components/phaser-official/build/phaser'
     },
     shim: {
         bootstrapAffix: {

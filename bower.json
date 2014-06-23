@@ -7,8 +7,5 @@
     "jquery": "~1.10.2",
     "phaser-official": "dev"
   },
-  "devDependencies": {},
-  "resolutions": {
-    "phaser-official": "dev"
-  }
+  "devDependencies": {}
 }

@@ -29,7 +29,8 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
 
         this.cursorIdx = 2;
         this.cursor = this.frontLayer.create(this.cursorIdx * Marble.WIDTH, this.center * Marble.HEIGHT, 'marbleatlas', 'COMMON01_BALL_POINTER');
-        
+
+        this.canHandleInput = true;
         this.allowInput = true;
         
         this.onMarbleMatched = new Phaser.Signal();
@@ -64,6 +65,12 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
     MarbleGroup.ROW_MIN = 5;
 
     MarbleGroup.MARBLE_KILL_DELAY = 50;
+
+    MarbleGroup.prototype.stopHandleInput = function() {
+        this.canHandleInput = false;
+        this.allowInput = false;
+        this.cursor.alpha = 0;
+    };
     
     MarbleGroup.prototype.initMarbles = function() {
         for (var i = 5; i<10; i++) {
@@ -246,6 +253,8 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
     };
 
     MarbleGroup.prototype.handleInput = function(input) {
+        if (!this.canHandleInput) return;
+        
         // allow left right anytime
         switch (input) {
         case MarbleGroup.Input.LEFT:
