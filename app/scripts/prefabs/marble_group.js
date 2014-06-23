@@ -146,6 +146,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         
             var dropColumn = this.marbleLeastLengthColumnExcludeFull();
 
+            // dropColumn = 0;
             // console.log(dropColumn);
             // this is no longer true since marbleDrops added
             // // can't check full here
@@ -174,12 +175,20 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
             this.marbleDrops[dropColumn].bottom++;
             
             row = this.rows + 1;
+
+            // if marble drops are more than 1 increase the row so they don't overlap
+            row += this.marbleDrops[dropColumn].bottom - 1;
+            
             marble.reset(row, dropColumn, color);
             tween = this.marbleContinueFallUp(marble, dropColumn, row - 1);
         } else {
             this.marbleDrops[dropColumn].top++;
             
             row = -2;
+
+            // if marble drops are more than 1 decrease the row so they don't overlap
+            row -= this.marbleDrops[dropColumn].top - 1;
+            
             marble.reset(row, dropColumn, color);
             tween = this.marbleContinueFallDown(marble, dropColumn, row + 1);
         }
