@@ -26,8 +26,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         this.cursor = this.frontLayer.create(this.cursorIdx * Marble.WIDTH, this.center * Marble.HEIGHT, 'marbleatlas', 'COMMON01_BALL_POINTER');
         
         this.allowInput = true;
-
-
+        
         this.onMarbleMatched = new Phaser.Signal();
         this.onMarbleFull = new Phaser.Signal();
     }
@@ -80,7 +79,8 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         var marble;
         
         this.marbleLayer.forEachDead(function(item) {
-            if (item.marbleColor === color) {
+            // canRecycle flag is necessary to recycle
+            if (item.marbleColor === color && item.canRecycle) {
                 marble = item;
             }
         }, this);
@@ -373,7 +373,20 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         var tween;
         for (var i = 0; i < this.columns; i++) {
             var marble = this.getMarble(this.center, i);
+
+            // checking for alive caused a hard to find bug
+            // where marble was recycled after getting killed
+            // before executing this test
+            // fix was by introducting canRecycle flag on the marble
             if (!marble.alive) {
+
+                // allow recycle now, where we actually remove
+                // it from the marbles
+                marble.allowRecycle();
+                
+                // setting to null is dangerous, because
+                // this.marbleEdges isn't get updated
+                // however next function fills up the space immediately
                 this.setMarble(this.center, i, null);
                 
                 tween = this.dropMarblesInColumn(i);

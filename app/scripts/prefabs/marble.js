@@ -38,6 +38,8 @@ define(['phaser'], function(Phaser) {
 
         this.setRow(row);
 
+        this.canRecycle = false;
+
         this.anchor = { x: 0.5, y: 0.5 };
     }
 
@@ -68,12 +70,17 @@ define(['phaser'], function(Phaser) {
         
         Phaser.Sprite.prototype.reset.call(this, x, y);
         this.setRow(row);
+        this.canRecycle = false;
     };
 
     Marble.prototype.setRow = function(row) {
         // tweak so 7th row ends up 0
         var index = (- row + 7 + 12) % 3;
         this.frameName = ([12, 4, 8].mapConcat(this.preFrame))[index];
+    };
+
+    Marble.prototype.allowRecycle = function() {
+        this.canRecycle = true;
     };
     
     Marble.prototype.up = function(i) {
