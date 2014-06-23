@@ -302,7 +302,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
                 
                 tween = column[i + 1].down(i + 1);
             }
-        }
+        }        
 
         this.marbleEdges[this.cursorIdx].top--;
         this.marbleEdges[this.cursorIdx].bottom++;

@@ -13,7 +13,7 @@ define(['phaser', 'prefabs/marble', 'bot/strat', 'bot/quick_strat', 'bot/qrandom
         this.strat;
 
         this.updateRate = 0.02;
-        this.visibleDelay = 0.2;
+        this.visibleDelay = 0.5;
     }
 
     BotAI.Strat = {
