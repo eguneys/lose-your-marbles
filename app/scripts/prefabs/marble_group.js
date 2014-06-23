@@ -589,15 +589,19 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
 
     MarbleGroup.prototype.canLiftUp = function(col) {
         var maxEdge = (this.rows - 1) / 2;
-        maxEdge += this.marbleDrops[col].top;
-        return this.marbleEdges[col].top < maxEdge && this.marbleEdges[col].bottom > 1;
+
+        var edgeLength = this.marbleEdges[col].top + this.marbleDrops[col].top;
+        
+        return edgeLength < maxEdge && this.marbleEdges[col].bottom > 1;
         //return (!!column[0] || !column[this.center + 1]);
     };
 
     MarbleGroup.prototype.canLiftDown = function(col) {
         var maxEdge = (this.rows - 1) / 2;
-        maxEdge -= this.marbleDrops[col].bottom;
-        return (this.marbleEdges[col].bottom - 1) < maxEdge && this.marbleEdges[col].top > 0;
+
+        var edgeLength = (this.marbleEdges[col].bottom - 1) + this.marbleDrops[col].bottom;
+        
+        return edgeLength < maxEdge && this.marbleEdges[col].top > 0;
         //return (!!column[this.rows - 1] || !column[this.center - 1]);
     };
 
