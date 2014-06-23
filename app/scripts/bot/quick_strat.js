@@ -1,7 +1,7 @@
 'use strict';
 
 define(['bot/strat'], function(BaseStrat) {
-    function QuickStrat(focus) { 
+    function QuickStrat(focus) {
         BaseStrat.call(this, focus);
 
         this.state = {};

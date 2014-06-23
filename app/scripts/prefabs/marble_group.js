@@ -534,7 +534,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         // start from top, this affects where marbles accumulate most
         for (var i = least; i >= 0; i--) {
 
-            if (this.isFull(i)) continue;
+            if (this.isFull(i)) { continue; }
             
             var cleast = Math.min(this.marbleEdges[least].top + this.marbleDrops[least].top,
                                   this.marbleEdges[least].bottom + this.marbleDrops[least].bottom);
@@ -545,7 +545,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         }
 
         return least;
-    };    
+    };
     
     MarbleGroup.prototype.marbleLeastLengthColumn = function() {
         var least = this.columns - 1;
@@ -583,8 +583,8 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
 
     MarbleGroup.prototype.isFull = function(col) {
         //return this.marbleColumnLength(col) >= this.rows;
-        return (this.marbleEdges[col].top + this.marbleDrops[col].top)
-            + (this.marbleEdges[col].bottom + this.marbleDrops[col].bottom) >= this.rows;
+        return (this.marbleEdges[col].top + this.marbleDrops[col].top) +
+            (this.marbleEdges[col].bottom + this.marbleDrops[col].bottom) >= this.rows;
     };
 
     MarbleGroup.prototype.canLiftUp = function(col) {

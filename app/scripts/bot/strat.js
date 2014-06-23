@@ -29,13 +29,13 @@ define([], function() {
         }
     };
     
-    BaseStrat.prototype.begin = function(state) { };
-    BaseStrat.prototype.resume = function(state) { };
+    BaseStrat.prototype.begin = function() { };
+    BaseStrat.prototype.resume = function() { };
     
     BaseStrat.prototype.movePitchToColor = function(state, column, color) {
         var row = this.findColorRowInColumn(state, column, color);
 
-        if (row === -1) return false;
+        if (row === -1) { return false; }
 
         this.movePitchToRow(state, row);
         
@@ -45,7 +45,7 @@ define([], function() {
     BaseStrat.prototype.findColorDistance = function(state, column, color) {
         var row = this.findColorRowInColumn(state, column, color);
         
-        if (row === -1) return -1;
+        if (row === -1) { return -1; }
         
         return Math.abs(7 - row);
     };
@@ -83,7 +83,7 @@ define([], function() {
             dir = -1;
         }
 
-        while (row != pitchRow) {
+        while (row !== pitchRow) {
             row += dir;
             this.moveColumn(iDir);
         }
@@ -98,7 +98,7 @@ define([], function() {
             dir = -1;
         }
         
-        while (column != state.cursor) {
+        while (column !== state.cursor) {
             column+=dir;
             this.moveCursor(iDir);
         }
@@ -136,7 +136,7 @@ define([], function() {
 
     BaseStrat.prototype.right = function() {
         this.focus.push(BaseStrat.Input.RIGHT);
-    };    
+    };
 
     BaseStrat.prototype.getMarble = function(marbles, row, column) {
         return marbles[column][row];

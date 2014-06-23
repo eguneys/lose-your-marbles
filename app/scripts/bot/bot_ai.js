@@ -10,7 +10,7 @@ define(['phaser', 'prefabs/marble', 'bot/strat', 'bot/quick_strat', 'bot/qrandom
 
         this.focus = [];
 
-        this.strat;
+        this.strat = null;
 
         this.updateRate = 0.02;
         this.visibleDelay = 0.5;
@@ -46,13 +46,12 @@ define(['phaser', 'prefabs/marble', 'bot/strat', 'bot/quick_strat', 'bot/qrandom
 
     BotAI.prototype.buildStrat = function(state) {
         var strat = BotAI.Strat.QUICK_RANDOM;
+        
         switch (strat) {
         case BotAI.Strat.QUICK:
             return new QuickStrat(this.focus);
-            break;
         case BotAI.Strat.QUICK_RANDOM:
             return new QuickRandomStrat(this.focus);
-            break;
         }
     };
     
