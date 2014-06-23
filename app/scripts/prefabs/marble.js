@@ -127,11 +127,15 @@ define(['phaser'], function(Phaser) {
         
         // stop the current animation
         this.animations.currentAnim.stop();
+
+
+        // lc supposed to fix something
+        var syncAnim = marble.animations.currentAnim.name;
+        var lc = syncAnim[syncAnim.length - 1];
         
-        if (marble.animations.currentAnim.isPlaying) {
+        if (marble.animations.currentAnim.isPlaying && (lc >= '0' && lc <= '9')) {
             // animation to be played
             //var a = this.animations.getAnimation('down' + aindex);
-            var syncAnim = marble.animations.currentAnim.name;
             syncAnim = syncAnim.replace(/\d+/g, '') + aindex;
             
             var a = this.animations.getAnimation(syncAnim);
