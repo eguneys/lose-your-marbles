@@ -1,10 +1,10 @@
 'use strict';
 
 define(['phaser', 'prefabs/round_splash', 'prefabs/blue_number'], function(Phaser, RoundSplash, BlueNumber) {
-    function RoundForeground(game) {
-        Phaser.Group.call(this, game);
+    function RoundForeground(game, round, parent) {
+        Phaser.Group.call(this, game, parent);
         
-        this.roundSplash = new RoundSplash(this.game, this);
+        this.roundSplash = new RoundSplash(this.game, round, this);
 
         this.roundSplash.x = (this.game.width - this.roundSplash.width) / 2;
         this.roundSplash.y = (this.game.height / 2) - this.roundSplash.height;

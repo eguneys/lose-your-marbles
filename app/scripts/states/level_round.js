@@ -14,7 +14,7 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
             
             this.background = this.game.add.sprite(0, 0, 'marbleatlas2', 'LEVEL1BG.png', this.renderLayer);
 
-            this.foreground = new RoundForeground(this.game, this.renderLayer);
+            this.foreground = new RoundForeground(this.game, this.levelData.round, this.renderLayer);
 
             this.match = new MarbleMatch(this.game, this.levelData, this.renderLayer);
             this.match.x = 53;
@@ -70,6 +70,7 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
         },
         
         roundEnd: function(winner) {
+            this.levelData.round++;
             this.levelData.players[winner].score++;
             
             var tweenEnd = this.game.add.tween(this.renderLayer)
