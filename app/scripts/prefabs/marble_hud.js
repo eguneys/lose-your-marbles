@@ -1,7 +1,7 @@
 'use strict';
 
-define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number', 'prefabs/pop_number', 'prefabs/bounce_marble'], function(Phaser, Marble, BlueNumber, RedNumber, PopNumber, BounceMarble) {
-    function MarbleHud(game, parent, color, height, toPosX) {
+define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number', 'prefabs/pop_number', 'prefabs/bounce_marble', 'prefabs/round_score'], function(Phaser, Marble, BlueNumber, RedNumber, PopNumber, BounceMarble, RoundScore) {
+    function MarbleHud(game, parent, color, level, score, height, toPosX) {
         Phaser.Group.call(this, game, parent);
 
         this.scPos = { x: 0, y: height * 7 / 15 };
@@ -11,6 +11,12 @@ define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number',
         
         this.marbleCounter = new MarbleCounter(this.game, this, color, popPos);
         this.marbleCounter.y = height * 9/15;
+        
+        this.score = new RoundScore(this.game, 0, 0, level, score);
+        if (!score || score > 5) {
+            this.score.alpha = 0;
+        }
+        this.add(this.score);
 
         this.redNumbers = this.game.add.group(this);
 

@@ -1,9 +1,11 @@
 'use strict';
 
 define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'], function(Phaser, MarbleGroup, MarbleHud, Marble) {
-    function MarbleMatch(game, parent) {
+    function MarbleMatch(game, levelData, parent) {
         Phaser.Group.call(this, game, parent);
 
+        this.levelData = levelData;
+        
         this.matchInfo = [];
         this.marbles = [];
         this.hud = [];
@@ -11,6 +13,7 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         var p1Info = {
             pos: { x: 0, y: 0 },
             matchColor: Marble.Color.GREEN,
+            score: levelData.players[MarbleMatch.Player.ONE].score
         };
 
         this.matchInfo[MarbleMatch.Player.ONE] = p1Info;
@@ -23,7 +26,8 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
 
         var p2Info = {
             pos: { x: 640 - 53 - 50 - (p1.width * 5/6), y: 0 },
-            matchColor: Marble.Color.GREEN
+            matchColor: Marble.Color.GREEN,
+            score: levelData.players[MarbleMatch.Player.TWO].score
         };
 
         this.matchInfo[MarbleMatch.Player.TWO] = p2Info;
@@ -38,13 +42,13 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
 
         var hudDiff = p2Info.pos.x - (p1Info.pos.x + p1.width) - 50;
         
-        var p1Hud = new MarbleHud(this.game, this, p1Info.matchColor, p1.height, hudDiff);
+        var p1Hud = new MarbleHud(this.game, this, p1Info.matchColor, this.levelData.level, p1Info.score, p1.height, hudDiff);
         p1Hud.x = p1.width;
         p1Hud.onMarblePop.add(this.marblePop.bind(this, MarbleMatch.Player.ONE));
 
         this.hud[MarbleMatch.Player.ONE] = p1Hud;
 
-        var p2Hud = new MarbleHud(this.game, this, p2Info.matchColor, p2.height, -hudDiff);
+        var p2Hud = new MarbleHud(this.game, this, p2Info.matchColor, this.levelData.level, p2Info.score, p2.height, -hudDiff);
         p2Hud.x = p2Info.pos.x - Marble.WIDTH * 2;
         p2Hud.onMarblePop.add(this.marblePop.bind(this, MarbleMatch.Player.TWO));
         this.hud[MarbleMatch.Player.TWO] = p2Hud;
@@ -71,12 +75,13 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
     };
 
     MarbleMatch.prototype.marbleFull = function(loser) {
-        this.matchEnd();
+        var winner = (loser + 1) % 2;
+        this.matchEnd(winner);
 
         var tween = this.tweenMatchEnd(loser);
 
         this.game.time.events.add(2000, function() {
-            this.onMatchEnd.dispatch(loser);
+            this.onMatchEnd.dispatch(winner);
         }, this);
     };
     

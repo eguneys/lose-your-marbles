@@ -4,21 +4,24 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
     function LevelRoundState() {}
 
     LevelRoundState.prototype = {
+        init: function(args) {
+            this.levelData = args;
+        },
+        
         create: function() {
-
+            
             this.renderLayer = this.game.add.group();
             
             this.background = this.game.add.sprite(0, 0, 'marbleatlas2', 'LEVEL1BG.png', this.renderLayer);
 
             this.foreground = new RoundForeground(this.game, this.renderLayer);
 
-            this.match = new MarbleMatch(this.game, this.renderLayer);
+            this.match = new MarbleMatch(this.game, this.levelData, this.renderLayer);
             this.match.x = 53;
             this.match.y = 20;
+            this.match.alpha = 0;
             
             this.match.onMatchEnd.add(this.roundEnd, this);
-            
-            this.match.alpha = 0;
             
             this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
             this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -29,13 +32,16 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
             this.foreground.startCountdown(this.roundStart ,this);
 
             this.botAI = new BotAI();
-
             this.botAI2 = new BotAI();
         },
 
         update: function() {
             this.botAI.update(this.match.queryGameState(MarbleMatch.Player.TWO));
             this.botAI2.update(this.match.queryGameState(MarbleMatch.Player.ONE));
+
+            if (this.filter) {
+                this.filter.update();
+            }
         },
         
         roundStart: function() {
@@ -63,33 +69,18 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
             this.botAI.shiftPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.SHIFT));
         },
         
-        roundEnd: function(player) {
-
-            this.bmd = this.game.make.bitmapData(640, 480);
-
-            this.bmdTexture = this.game.add.renderTexture(640, 480, 'bmd');
-            this.bmdTexture.render(this.renderLayer);
-
-            //this.bmdSprite = this.game.make.sprite(0, 0, 'marbleatlas2', 'LEVEL1BG.png');
-
-            this.bmdSprite = this.game.make.sprite(0, 0, this.bmdTexture);
-
-            this.bmd.draw(this.bmdSprite);
-
-            this.game.add.sprite(0, 0, this.bmd);
+        roundEnd: function(winner) {
+            this.levelData.players[winner].score++;
             
-            
-            var obj = { y: 0 };
-            var meltTween = this.game.add.tween(obj)
-                .to({y: this.background.height }, 2000, Phaser.Easing.Linear.None, true);
+            var tweenEnd = this.game.add.tween(this.renderLayer)
+                .to({y: this.background.height}, 1000, Phaser.Easing.Linear.None, true);
 
-            meltTween.onUpdateCallback(this.doMeltUpdate.bind(this, obj));
+            tweenEnd.onComplete.add(this.nextRound, this);
         },
 
-
-        doMeltUpdate: function(obj) {
-            // this.renderLayer.y = obj.y;
-        }
+        nextRound: function() {
+            this.game.state.start('level-round', true, false, this.levelData);
+        },
         
     };
 

@@ -14,7 +14,8 @@ define(['phaser'], function(Phaser) {
         },
 
         create: function() {
-            this.game.state.start('level-round');
+            var levelData = { level: 1, players: [{score: 0}, {score:0}] };
+            this.game.state.start('level-round', true, false, levelData);
         }
     };
 
