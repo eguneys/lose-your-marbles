@@ -70,7 +70,6 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
         },
         
         roundEnd: function(winner) {
-            this.levelData.round++;
             this.levelData.players[winner].score++;
             
             var tweenEnd = this.game.add.tween(this.renderLayer)
@@ -80,7 +79,7 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
         },
 
         nextRound: function() {
-            this.game.state.start('level-round', true, false, this.levelData);
+            this.game.state.start('level-master', true, false, this.levelData);
         },
         
     };

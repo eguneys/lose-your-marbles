@@ -1,8 +1,8 @@
 'use strict';
 
 define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
-    function SkillMenu(game) {
-        Phaser.Group.call(this, game);
+    function SkillMenu(game, parent) {
+        Phaser.Group.call(this, game, parent);
         
         this.menuItems = [];
         this.menuIdx = SkillMenu.Items.TWO;

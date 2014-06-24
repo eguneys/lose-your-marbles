@@ -1,8 +1,8 @@
 'use strict';
 
 define(['phaser'], function(Phaser) {
-    function LevelSplash(game) {
-        Phaser.Group.call(this, game);
+    function LevelSplash(game, level, parent) {
+        Phaser.Group.call(this, game, parent);
 
         this.levelText = this.create(0, 0, 'marbleatlas', 'DIALOG_TEXT_LEVEL');
 
@@ -20,7 +20,7 @@ define(['phaser'], function(Phaser) {
         
         this.levelDigit.x = this.levelText.width;
 
-        this.levelDigit.animations.play('1');
+        this.levelDigit.animations.play(level);
 
         this.width = this.levelText.width;
         this.height = this.levelText.height;

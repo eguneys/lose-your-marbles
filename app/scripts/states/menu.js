@@ -85,7 +85,7 @@ define(['phaser', 'prefabs/main_menu', 'prefabs/fade_tween'], function(Phaser, M
             tweenFadeIn
                 .to({alpha: 1}, 2000, Phaser.Easing.Linear.None)
                 .onComplete.add(function() {
-                    this.game.state.start('level-intro');
+                    this.game.state.start('level-master');
                 }, this);
             
             tweenMenuShrink.chain(tweenFadeIn);

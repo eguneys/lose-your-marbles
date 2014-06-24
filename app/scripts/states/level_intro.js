@@ -4,6 +4,10 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
     function LevelIntroState() {}
 
     LevelIntroState.prototype = {
+        init: function(levelData) {
+            this.levelData = levelData;
+        },
+        
         create: function() {
 
             this.inputTime = 0;
@@ -15,14 +19,14 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
             
             this.fadeBg = new FadeTween(this.game, 1);
             this.game.add.existing(this.fadeBg);
-
-            this.levelSplash = new LevelSplash(this.game);
+            
+            this.levelSplash = new LevelSplash(this.game, this.levelData.level);
         
             this.levelSplash.x = (this.game.width - this.levelSplash.width) / 2;
             this.levelSplash.y = (this.game.height - this.levelSplash.height) / 2;
 
             this.skillMenu = new SkillMenu(this.game);
-
+            
             this.skillMenu.x = this.game.width / 4 - 30;
             this.skillMenu.y = this.game.height / 2;
             this.skillMenu.scale = { x: 0, y: 0 };
@@ -86,7 +90,7 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
             var tweenSkillMenuShrink = this.game.add.tween(this.skillMenu.scale);
             tweenSkillMenuShrink.to({ x: 0, y: 0 }, 200)
             .onComplete.add(function() {
-                this.game.state.start('level-round');
+                this.game.state.start('level-round', true, false, this.levelData);
             }, this);
 
             tweenSkillMenuShrink.start();

@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'states/boot', 'states/preload', 'states/menu', 'states/level_intro', 'states/level_round'], function(Phaser, BootState, PreloadState, MenuState, LevelIntroState, LevelRoundState) {
+define(['phaser', 'states/boot', 'states/preload', 'states/menu', 'states/level_master', 'states/level_intro', 'states/level_round'], function(Phaser, BootState, PreloadState, MenuState, LevelMasterState, LevelIntroState, LevelRoundState) {
     function Game() { }
 
     Game.prototype = {
@@ -11,6 +11,7 @@ define(['phaser', 'states/boot', 'states/preload', 'states/menu', 'states/level_
             game.state.add('boot', BootState);
             game.state.add('preload', PreloadState);
             game.state.add('menu', MenuState);
+            game.state.add('level-master', LevelMasterState);
             game.state.add('level-intro', LevelIntroState);
             game.state.add('level-round', LevelRoundState);
     
