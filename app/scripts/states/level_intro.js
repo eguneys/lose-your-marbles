@@ -24,14 +24,23 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
         
             this.levelSplash.x = (this.game.width - this.levelSplash.width) / 2;
             this.levelSplash.y = (this.game.height - this.levelSplash.height) / 2;
+            
+            var tweenIntro = this.tweenIntro();
+            
+            if (this.levelData.level === 1) {
+            
+                this.skillMenu = new SkillMenu(this.game);
+            
+                this.skillMenu.x = this.game.width / 4 - 30;
+                this.skillMenu.y = this.game.height / 2;
+                this.skillMenu.scale = { x: 0, y: 0 };
 
-            this.skillMenu = new SkillMenu(this.game);
-            
-            this.skillMenu.x = this.game.width / 4 - 30;
-            this.skillMenu.y = this.game.height / 2;
-            this.skillMenu.scale = { x: 0, y: 0 };
-            
-            this.tweenLevelDisplay();
+                var tweenSkillMenuPop = this.tweenSkillMenuPop();
+                
+                tweenIntro.chain(tweenSkillMenuPop);
+            } else {
+                tweenIntro.onComplete.add(this.levelStart, this);
+            }
         },
 
         update: function() {
@@ -42,6 +51,10 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
             this.inputTime += this.game.time.elapsed;
         },
 
+        levelStart: function() {
+            this.game.state.start('level-round', true, false, this.levelData);
+        },
+        
         handleKeyPress: function() {
             var isKeyPressed = true;
             
@@ -63,37 +76,40 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
             return isKeyPressed;
         },
 
-        tweenLevelDisplay: function() {
-            var tweenLevelSplash = this.game.add.tween(this.levelSplash);
-            tweenLevelSplash.to({alpha: 0}, 1000, Phaser.Easing.Linear.None);
+        tweenIntro: function() {
+            var tweenLevelSplash = this.game.add.tween(this.levelSplash)
+                .to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true);
             
-            var tweenFadeOut = this.game.add.tween(this.fadeBg);
-            tweenFadeOut.to({alpha: 0}, 2000, Phaser.Easing.Linear.None);
+            var tweenFadeOut = this.game.add.tween(this.fadeBg)
+                .to({alpha: 0}, 2000, Phaser.Easing.Linear.None);
 
             var drawTweens = this.foreground.getDrawTweens();
 
-            var tweenSkillMenuPop = this.game.add.tween(this.skillMenu.scale);
-            tweenSkillMenuPop.to({ x: 1, y: 1 }, 500, Phaser.Easing.Bounce.Out);
-
-            tweenSkillMenuPop.onComplete.add(function() {
-                this.skillMenuReady = true;
-            }, this);
-            
             tweenLevelSplash.chain(tweenFadeOut);
             tweenFadeOut.chain(drawTweens.first);
-            drawTweens.last.chain(tweenSkillMenuPop);
+
+            return drawTweens.last;
+        },
+
+        tweenSkillMenuPop: function() {
+            var tween = this.game.add.tween(this.skillMenu.scale)
+                .to({ x: 1, y: 1 }, 500, Phaser.Easing.Bounce.Out);
+
             
-            tweenLevelSplash.start();
+            tween.onComplete.add(function() {
+                    this.skillMenuReady = true;
+                }, this);
+            
+            return tween;
         },
 
         tweenSkillMenuSelect: function() {
-            var tweenSkillMenuShrink = this.game.add.tween(this.skillMenu.scale);
-            tweenSkillMenuShrink.to({ x: 0, y: 0 }, 200)
-            .onComplete.add(function() {
-                this.game.state.start('level-round', true, false, this.levelData);
-            }, this);
+            var tween = this.game.add.tween(this.skillMenu.scale)
+                .to({ x: 0, y: 0 }, 200, Phaser.Easing.Linear.None, true);
 
-            tweenSkillMenuShrink.start();
+            tween.onComplete.add(this.levelStart, this);
+
+            return tween;
         }
     };
 
