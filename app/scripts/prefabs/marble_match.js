@@ -13,6 +13,7 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         var p1Info = {
             pos: { x: 0, y: 0 },
             matchColor: Marble.Color.GREEN,
+            skill: levelData.players[MarbleMatch.Player.ONE].skill,
             score: levelData.players[MarbleMatch.Player.ONE].score
         };
 
@@ -27,6 +28,7 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         var p2Info = {
             pos: { x: 640 - 53 - 50 - (p1.width * 5/6), y: 0 },
             matchColor: Marble.Color.GREEN,
+            skill: levelData.players[MarbleMatch.Player.TWO].skill,
             score: levelData.players[MarbleMatch.Player.TWO].score
         };
 
@@ -65,8 +67,11 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
     };
 
     MarbleMatch.prototype.matchStart = function() {
-        this.marbles[MarbleMatch.Player.ONE].initMarbles();
-        this.marbles[MarbleMatch.Player.TWO].initMarbles();
+        var m1 = this.matchInfo[MarbleMatch.Player.ONE].skill;
+        var m2 = this.matchInfo[MarbleMatch.Player.TWO].skill;
+        
+        this.marbles[MarbleMatch.Player.ONE].initMarbles(m1);
+        this.marbles[MarbleMatch.Player.TWO].initMarbles(m2);
     };
 
     MarbleMatch.prototype.matchEnd = function() {

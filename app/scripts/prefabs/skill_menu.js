@@ -1,8 +1,10 @@
 'use strict';
 
-define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
+define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser, RedMarble, SkillDigit) {
     function SkillMenu(game, parent) {
         Phaser.Group.call(this, game, parent);
+
+        this.allowSelect = true;
         
         this.menuItems = [];
         this.menuIdx = SkillMenu.Items.TWO;
@@ -11,34 +13,18 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
 
         var menuWidth = this.menuBg.width;
         var menuHeight = this.menuBg.height;
-
-        var whirlDecreaseCallback = function() {
-            if (this.speed <= 26) {
-                this.stop(false, false);
-            } else {
-                this.play(this.speed - 26);
-            }
-        };
         
-        this.itemOne = this.create(this.menuBg.x + menuWidth / 2 - 5, 70, 'marbleatlas', 'COMMON04_DIGITS11');
-        this.itemOne.animations.add('whirl',
-                                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-                                     12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1].mapConcat('COMMON04_DIGITS1'), 26 * 10, false)
-            .onComplete.add(whirlDecreaseCallback, this.itemOne.animations.getAnimation('whirl'));
+        this.itemOne = new SkillDigit(this.game, this.menuBg.x + menuWidth / 2 - 5, 70, 1);
+        this.itemTwo = new SkillDigit(this.game, this.menuBg.x + menuWidth / 2 - 5, 70 + 80, 2);
+        this.itemThree = new SkillDigit(this.game, this.menuBg.x + menuWidth / 2 - 5, 70 + 80 + 80, 3);
 
-        this.itemTwo = this.create(this.menuBg.x + menuWidth / 2 - 5, 70 + 80, 'marbleatlas', 'COMMON04_DIGITS21');
-        this.itemTwo.animations.add('whirl',
-                                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-                                     12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1].mapConcat('COMMON04_DIGITS2'), 26 * 10, false)
-            .onComplete.add(whirlDecreaseCallback, this.itemTwo.animations.getAnimation('whirl'));
+        this.add(this.itemOne);
+        this.add(this.itemTwo);
+        this.add(this.itemThree);
 
-
-        this.itemThree = this.create(this.menuBg.x + menuWidth / 2 - 5, 70 + 80 + 80, 'marbleatlas', 'COMMON04_DIGITS31');
-        this.itemThree.animations.add('whirl',
-                                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-                                     12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1].mapConcat('COMMON04_DIGITS3'), 26 * 10, false)
-            .onComplete.add(whirlDecreaseCallback, this.itemThree.animations.getAnimation('whirl'));
-        
+        this.itemOne.onWhirlDone.add(this.selectDone, this);
+        this.itemTwo.onWhirlDone.add(this.selectDone, this);
+        this.itemThree.onWhirlDone.add(this.selectDone, this);
         
         this.menuItems[SkillMenu.Items.ONE] = this.itemOne;
         this.menuItems[SkillMenu.Items.TWO] = this.itemTwo;
@@ -46,13 +32,14 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
 
 
         this.redMarble = new RedMarble(this.game, this);
-        
         this.redMarble.x = this.menuItems[this.menuIdx].x - this.redMarble.width;
         this.redMarble.y = this.menuItems[this.menuIdx].y - 10;
         
         this.pivot = { x: menuWidth / 2, y: menuHeight / 2 };
 
         this.redMarble.playPoint();
+
+        this.onMenuSelect = new Phaser.Signal();
     }
 
     SkillMenu.prototype = Object.create(Phaser.Group.prototype);
@@ -70,6 +57,8 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
     };
 
     SkillMenu.prototype.navigate = function(direction) {
+        if (!this.allowSelect) return;
+        
         var newIdx = this.menuIdx;
         
         switch(direction) {
@@ -89,16 +78,27 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
     };
 
     SkillMenu.prototype.select = function() {
+        if (!this.allowSelect) return;
+        this.allowSelect = false;
+        
         this.redMarble.playSmack();
         this.game.time.events.add(Phaser.Timer.SECOND * 14/15, function() {
-            this.menuItems[this.menuIdx].animations.play('whirl', 26 * 10);
+            this.menuItems[this.menuIdx].whirl();
 
             for (var i = (this.menuIdx + 1) % 3; i !== this.menuIdx; i = (i + 1) % 3) {
                 this.menuItems[i].alpha = 0;
             }
         }, this);
 
-        return this.menuIdx;
+        return this.getSelectedItem();
+    };
+
+    SkillMenu.prototype.selectDone = function() {
+        this.onMenuSelect.dispatch(this.getSelectedItem());
+    };
+
+    SkillMenu.prototype.getSelectedItem = function() {
+        return this.menuIdx + 1;
     };
     
     return SkillMenu;

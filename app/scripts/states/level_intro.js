@@ -9,9 +9,6 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
         },
         
         create: function() {
-
-            this.inputTime = 0;
-            this.skillMenuReady = false;
             
             this.background = this.game.add.sprite(0, 0, 'marbleatlas2', 'TRANS1A.png');
 
@@ -35,47 +32,40 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
                 this.skillMenu.y = this.game.height / 2;
                 this.skillMenu.scale = { x: 0, y: 0 };
 
+                this.skillMenu.onMenuSelect.add(this.skillMenuSelected, this);
+
                 var tweenSkillMenuPop = this.tweenSkillMenuPop();
                 
                 tweenIntro.chain(tweenSkillMenuPop);
+
+
+                this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
+                this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+                this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+                this.spacebarKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
             } else {
                 tweenIntro.onComplete.add(this.levelStart, this);
             }
-        },
-
-        update: function() {
-            if (this.skillMenuReady && this.inputTime > 150 && this.handleKeyPress()) {
-                this.inputTime = 0;
-            }
-
-            this.inputTime += this.game.time.elapsed;
         },
 
         levelStart: function() {
             this.game.state.start('level-round', true, false, this.levelData);
         },
         
-        handleKeyPress: function() {
-            var isKeyPressed = true;
+        skillMenuPopped: function() {
+            this.upKey.onDown.add(this.skillMenu.navigate.bind(this.skillMenu, SkillMenu.Select.UP));
+            this.downKey.onDown.add(this.skillMenu.navigate.bind(this.skillMenu, SkillMenu.Select.DOWN));
+            this.enterKey.onDown.add(this.skillMenu.select, this.skillMenu);
+            this.spacebarKey.onDown.add(this.skillMenu.select, this.skillMenu);
             
-            if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-                this.skillMenu.navigate(SkillMenu.Select.UP);
-            } else if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-                this.skillMenu.navigate(SkillMenu.Select.DOWN);
-            } else if (this.game.input.keyboard.isDown(Phaser.Keyboard.ENTER) || this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-                this.skillMenuReady = false;
-                var skill = this.skillMenu.select();
-
-                this.game.time.events.add(Phaser.Timer.SECOND * 4, function() {
-                    this.tweenSkillMenuSelect(skill);
-                }, this);
-            } else {
-                isKeyPressed = false;
-            }
-
-            return isKeyPressed;
         },
 
+        skillMenuSelected: function(skill) {
+            this.levelData.players[0].skill = skill;
+            
+            this.tweenSkillMenuShrink();
+        },
+        
         tweenIntro: function() {
             var tweenLevelSplash = this.game.add.tween(this.levelSplash)
                 .to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true);
@@ -96,14 +86,12 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
                 .to({ x: 1, y: 1 }, 500, Phaser.Easing.Bounce.Out);
 
             
-            tween.onComplete.add(function() {
-                    this.skillMenuReady = true;
-                }, this);
+            tween.onComplete.add(this.skillMenuPopped, this);
             
             return tween;
         },
 
-        tweenSkillMenuSelect: function() {
+        tweenSkillMenuShrink: function() {
             var tween = this.game.add.tween(this.skillMenu.scale)
                 .to({ x: 0, y: 0 }, 200, Phaser.Easing.Linear.None, true);
 

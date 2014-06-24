@@ -72,8 +72,10 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         this.cursor.alpha = 0;
     };
     
-    MarbleGroup.prototype.initMarbles = function() {
-        for (var i = 5; i<10; i++) {
+    MarbleGroup.prototype.initMarbles = function(s) {
+        var initRow = 6 - s;
+        var endRow = 9 + s;
+        for (var i = initRow; i<endRow; i++) {
             for (var j = 0; j < this.columns; j++) {
                 this.addMarble(i, j);
             }

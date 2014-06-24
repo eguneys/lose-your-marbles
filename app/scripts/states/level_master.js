@@ -11,10 +11,12 @@ define(['phaser'], function(Phaser) {
                     round: 1,
                     players: [
                         {
-                            score: 0
+                            score: 0,
+                            skill: 1
                         },
                         {
-                            score: 0
+                            score: 0,
+                            skill: 1
                         }
                     ]
                 };
