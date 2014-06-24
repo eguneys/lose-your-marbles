@@ -57,7 +57,7 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
 
         this.onMatchEnd = new Phaser.Signal();
     }
-
+    
     MarbleMatch.prototype = Object.create(Phaser.Group.prototype);
     MarbleMatch.prototype.constructor = MarbleMatch;
 
@@ -83,7 +83,7 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         var winner = (loser + 1) % 2;
         this.matchEnd(winner);
 
-        var tween = this.tweenMatchEnd(loser);
+        this.tweenMatchEnd(loser);
 
         this.game.time.events.add(2000, function() {
             this.onMatchEnd.dispatch(winner);

@@ -57,7 +57,7 @@ define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser,
     };
 
     SkillMenu.prototype.navigate = function(direction) {
-        if (!this.allowSelect) return;
+        if (!this.allowSelect) { return; }
         
         var newIdx = this.menuIdx;
         
@@ -78,7 +78,7 @@ define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser,
     };
 
     SkillMenu.prototype.select = function() {
-        if (!this.allowSelect) return;
+        if (!this.allowSelect) { return; }
         this.allowSelect = false;
         
         this.redMarble.playSmack();

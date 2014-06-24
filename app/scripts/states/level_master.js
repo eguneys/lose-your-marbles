@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser'], function(Phaser) {
+define([], function() {
     function LevelMasterState() {}
 
     LevelMasterState.prototype = {
@@ -26,7 +26,7 @@ define(['phaser'], function(Phaser) {
         },
         
         create: function() {
-            if (this.isFirstLevel() || this.getWinningPlayer() != -1) {
+            if (this.isFirstLevel() || this.getWinningPlayer() !== -1) {
                 this.nextLevel();
             } else {
                 this.nextRound();
@@ -63,7 +63,7 @@ define(['phaser'], function(Phaser) {
             }
             return -1;
         },
-    }
+    };
 
     return LevelMasterState;
 });

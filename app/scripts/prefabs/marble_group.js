@@ -255,7 +255,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
     };
 
     MarbleGroup.prototype.handleInput = function(input) {
-        if (!this.canHandleInput) return;
+        if (!this.canHandleInput) { return; }
         
         // allow left right anytime
         switch (input) {
