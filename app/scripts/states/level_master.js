@@ -4,7 +4,7 @@ define(['prefabs/fade_tween'], function(FadeTween) {
     function LevelMasterState() {}
 
     LevelMasterState.prototype = {
-        init: function(levelData) {
+        init: function(levelData, transitionData) {
             if (!levelData) {
                 levelData = {
                     level: 0,
@@ -25,10 +25,20 @@ define(['prefabs/fade_tween'], function(FadeTween) {
             this.levelData = levelData;
 
             this.winScore = 2;
+
+            if (!transitionData) {
+                transitionData = {
+                    background: { color: 0xffffff, alpha: 1 },
+                    animation: LevelMasterState.Transition.NONE
+                };
+            }
+
+            this.transitionData = transitionData;
         },
         
         create: function() {
-            this.fadeBg = new FadeTween(this.game, 1);
+            var bgData = this.transitionData.background;
+            this.fadeBg = new FadeTween(this.game, bgData.color, bgData.alpha);
             this.game.add.existing(this.fadeBg);
 
             this.decideLevelState();
@@ -52,12 +62,12 @@ define(['prefabs/fade_tween'], function(FadeTween) {
 
             this.levelData.round = 1;
             
-            this.game.state.start('level-intro', true, false, this.levelData);
+            this.game.state.start('level-intro', true, false, this.levelData, this.transitionData);
         },
 
         nextRound: function() {
             this.levelData.round++;
-            this.game.state.start('level-round', true, false, this.levelData);
+            this.game.state.start('level-round', true, false, this.levelData, this.transitionData);
         },
 
         isFirstLevel: function() {
@@ -71,7 +81,13 @@ define(['prefabs/fade_tween'], function(FadeTween) {
                 }
             }
             return -1;
-        },
+        }
+    };
+
+    LevelMasterState.Transition = {
+        NONE: 0,
+        SLIDE_DOWN: 1,
+        SLIDE_LEFT: 2
     };
 
     return LevelMasterState;

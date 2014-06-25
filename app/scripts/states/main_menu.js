@@ -7,7 +7,7 @@ define(['phaser', 'prefabs/main_menu', 'prefabs/fade_tween'], function(Phaser, M
         create: function() {
             this.background = this.game.add.sprite(0, 0, 'marbleatlas', 'DIALOG_BG');
             
-            this.fadeBg = new FadeTween(this.game, 1);
+            this.fadeBg = new FadeTween(this.game, 0xffffff, 1);
             this.game.add.existing(this.fadeBg);
 
             this.menu = new MainMenu(this.game);

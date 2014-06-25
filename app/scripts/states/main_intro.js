@@ -7,7 +7,7 @@ define(['phaser', 'prefabs/fade_tween'], function(Phaser, FadeTween) {
         create: function() {
             this.splash = this.game.add.sprite(0, 0, 'marbleatlas2', 'o_splash.png');
             
-            this.fadeBg = new FadeTween(this.game);
+            this.fadeBg = new FadeTween(this.game, 0xffffff, 1);
             this.game.add.existing(this.fadeBg);
             
             this.tweenFadeState();

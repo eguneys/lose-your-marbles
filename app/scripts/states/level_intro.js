@@ -1,11 +1,12 @@
 'use strict';
 
-define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_foreground', 'prefabs/skill_menu'], function(Phaser, FadeTween, LevelSplash, LevelForeground, SkillMenu) {
+define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_foreground', 'prefabs/skill_menu'], function(Phaser, LevelMasterState, FadeTween, LevelSplash, LevelForeground, SkillMenu) {
     function LevelIntroState() {}
 
     LevelIntroState.prototype = {
-        init: function(levelData) {
+        init: function(levelData, transitionData) {
             this.levelData = levelData;
+            this.transitionData = transitionData;
         },
         
         create: function() {
@@ -15,7 +16,7 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
 
             this.foreground = new LevelForeground(this.game, level);
             
-            this.fadeBg = new FadeTween(this.game, 1);
+            this.fadeBg = new FadeTween(this.game, 0xffffff, 1);
             this.game.add.existing(this.fadeBg);
             
             this.levelSplash = new LevelSplash(this.game, level);
@@ -50,7 +51,9 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
         },
 
         levelStart: function() {
-            this.game.state.start('level-round', true, false, this.levelData);
+            this.transitionData.animation = LevelMasterState.Transition.NONE;
+            
+            this.game.state.start('level-round', true, false, this.levelData, this.transitionData);
         },
         
         skillMenuPopped: function() {

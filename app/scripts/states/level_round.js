@@ -1,11 +1,12 @@
 'use strict';
 
-define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai'], function(Phaser, RoundForeground, MarbleGroup, MarbleMatch, BotAI) {
+define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai'], function(Phaser, LevelMasterState, RoundForeground, MarbleGroup, MarbleMatch, BotAI) {
     function LevelRoundState() {}
 
     LevelRoundState.prototype = {
-        init: function(levelData) {
+        init: function(levelData, transitionData) {
             this.levelData = levelData;
+            this.transitionData = transitionData;
         },
         
         create: function() {
@@ -30,24 +31,35 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
             this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
             this.shiftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
             
-            this.foreground.startCountdown(this.roundStart ,this);
-
             this.botAI = new BotAI();
             this.botAI2 = new BotAI();
+
+            this.roundStart();
         },
 
         update: function() {
             this.botAI.update(this.match.queryGameState(MarbleMatch.Player.TWO));
             this.botAI2.update(this.match.queryGameState(MarbleMatch.Player.ONE));
-
-            if (this.filter) {
-                this.filter.update();
-            }
         },
         
         roundStart: function() {
+            this.tweenIntro();
+        },
+        
+        roundEnd: function(winner) {
+            this.levelData.players[winner].score++;
+
+            this.tweenOutro();
+        },
+
+        matchCountdown: function() {
+            this.foreground.startCountdown(this.matchStart ,this);
+        },
+
+        matchStart: function() {
             this.foreground.alpha = 0;
             this.match.alpha = 1;
+            
             this.match.matchStart();
             
             this.upKey.onDown.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.UP));
@@ -70,19 +82,71 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
             this.botAI.shiftPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.SHIFT));
         },
         
-        roundEnd: function(winner) {
-            this.levelData.players[winner].score++;
+        nextRound: function(outroAnimation) {
+            this.transitionData.background = { color: 0x000000, alpha: 1 };
+            this.transitionData.animation = outroAnimation;
             
-            var tweenEnd = this.game.add.tween(this.renderLayer)
-                .to({y: this.background.height}, 1000, Phaser.Easing.Linear.None, true);
-
-            tweenEnd.onComplete.add(this.nextRound, this);
-        },
-
-        nextRound: function() {
-            this.game.state.start('level-master', true, false, this.levelData);
+            this.game.state.start('level-master', true, false, this.levelData, this.transitionData);
         },
         
+        tweenIntro: function() {
+            switch(this.transitionData.animation) {
+            case LevelMasterState.Transition.NONE:
+                this.matchCountdown();
+                break;
+            case LevelMasterState.Transition.SLIDE_LEFT:
+                this.renderLayer.x = - this.background.width;
+                this.tweenIntroSlideLeft();
+                break;
+            case LevelMasterState.Transition.SLIDE_DOWN:
+                this.renderLayer.y = - this.background.height;
+                this.tweenIntroSlideDown();
+                break;
+            default:
+                throw "FailStateTransition " + this.transitionData.animation;
+            }
+        },
+        
+        tweenOutro: function() {
+            var tweenFunction = this.game.rnd.pick([
+                this.tweenOutroSlideDown,
+                this.tweenOutroSlideLeft
+            ]);
+
+            return tweenFunction.call(this);
+        },
+
+        tweenIntroSlideDown: function() {
+            var tween = this.game.add.tween(this.renderLayer)
+                    .to({ y: 0 }, 1000, Phaser.Easing.Bounce.Out, true);
+            
+            tween.onComplete.add(this.matchCountdown, this);
+            
+            return tween;
+        },
+
+        tweenIntroSlideLeft: function() {
+            var tween = this.game.add.tween(this.renderLayer)
+                    .to({ x: 0 }, 1000, Phaser.Easing.Bounce.Out, true);
+            
+            tween.onComplete.add(this.matchCountdown, this);
+            
+            return tween;
+        },
+
+        tweenOutroSlideDown: function() {
+            var tween = this.game.add.tween(this.renderLayer)
+                .to({y: this.background.height}, 1000, Phaser.Easing.Linear.None, true);
+
+            tween.onComplete.add(this.nextRound.bind(this, LevelMasterState.Transition.SLIDE_DOWN));            
+        },
+
+        tweenOutroSlideLeft: function() {
+            var tween = this.game.add.tween(this.renderLayer)
+                .to({x: this.background.width}, 1000, Phaser.Easing.Linear.None, true);
+
+            tween.onComplete.add(this.nextRound.bind(this, LevelMasterState.Transition.SLIDE_LEFT));
+        }
     };
 
     return LevelRoundState;
