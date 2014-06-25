@@ -23,6 +23,8 @@ define([], function() {
             }
 
             this.levelData = levelData;
+
+            this.winScore = 2;
         },
         
         create: function() {
@@ -57,7 +59,7 @@ define([], function() {
 
         getWinningPlayer: function() {
             for (var i = 0; i < this.levelData.players.length; i++) {
-                if (this.levelData.players[i].score >= 6) {
+                if (this.levelData.players[i].score >= this.winScore) {
                     return i;
                 }
             }

@@ -50,7 +50,7 @@
 		"spriteSourceSize": {"x":0,"y":0,"w":640,"h":480},
 		"sourceSize": {"w":640,"h":480}
 	},
-	"TRANS1A.png": {
+	"TRANS1B.png": {
 		"frame": {"x":641, "y":481, "w":640, "h":480},
 		"spriteSourceSize": {"x":0,"y":0,"w":640,"h":480},
 		"sourceSize": {"w":640,"h":480}

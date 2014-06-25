@@ -9,15 +9,16 @@ define(['phaser', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_f
         },
         
         create: function() {
+            var level = this.levelData.level;
             
-            this.background = this.game.add.sprite(0, 0, 'marbleatlas2', 'TRANS1A.png');
+            this.background = this.game.add.sprite(0, 0, 'marbleatlas2', 'TRANS' + level + 'B.png');
 
-            this.foreground = new LevelForeground(this.game);
+            this.foreground = new LevelForeground(this.game, level);
             
             this.fadeBg = new FadeTween(this.game, 1);
             this.game.add.existing(this.fadeBg);
             
-            this.levelSplash = new LevelSplash(this.game, this.levelData.level);
+            this.levelSplash = new LevelSplash(this.game, level);
         
             this.levelSplash.x = (this.game.width - this.levelSplash.width) / 2;
             this.levelSplash.y = (this.game.height - this.levelSplash.height) / 2;

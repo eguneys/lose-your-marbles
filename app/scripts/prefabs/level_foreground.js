@@ -1,15 +1,17 @@
 'use strict';
 
 define(['phaser'], function(Phaser) {
-    function LevelForeground(game) {
+    function LevelForeground(game, level) {
         Phaser.Group.call(this, game);
 
+        this.level = level;
+        
         this.rect1 = new Phaser.Rectangle(10, 0, 180, 480);
         this.rect2 = new Phaser.Rectangle(610 - 180 - 40, 0, 170, 480);
         
         this.beginDraw = false;
-        
-        this.foreground = this.create(0, 0, 'marbleatlas2', 'LEVEL1BG.png');
+
+        this.foreground = this.create(0, 0, 'marbleatlas2', 'LEVEL' + this.level + 'BG.png');
 
         this.foregroundMask = new RectGroup(this.game);
         

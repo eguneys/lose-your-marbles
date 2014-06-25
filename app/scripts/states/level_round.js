@@ -4,15 +4,16 @@ define(['phaser', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/m
     function LevelRoundState() {}
 
     LevelRoundState.prototype = {
-        init: function(args) {
-            this.levelData = args;
+        init: function(levelData) {
+            this.levelData = levelData;
         },
         
         create: function() {
+            var level = this.levelData.level;
             
             this.renderLayer = this.game.add.group();
             
-            this.background = this.game.add.sprite(0, 0, 'marbleatlas2', 'LEVEL1BG.png', this.renderLayer);
+            this.background = this.game.add.sprite(0, 0, 'marbleatlas2', 'LEVEL' + level + 'BG.png', this.renderLayer);
 
             this.foreground = new RoundForeground(this.game, this.levelData.round, this.renderLayer);
 
