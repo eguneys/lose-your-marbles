@@ -1,6 +1,6 @@
 'use strict';
 
-define([], function() {
+define(['prefabs/fade_tween'], function(FadeTween) {
     function LevelMasterState() {}
 
     LevelMasterState.prototype = {
@@ -28,6 +28,13 @@ define([], function() {
         },
         
         create: function() {
+            this.fadeBg = new FadeTween(this.game, 1);
+            this.game.add.existing(this.fadeBg);
+
+            this.decideLevelState();
+        },
+
+        decideLevelState: function() {
             if (this.isFirstLevel() || this.getWinningPlayer() !== -1) {
                 this.nextLevel();
             } else {

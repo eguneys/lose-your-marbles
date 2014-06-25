@@ -13,7 +13,7 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
 
         var menuWidth = this.menuBg.width;
         var menuHeight = this.menuBg.height;
-
+        
         this.menuSam = this.create(menuWidth / 2 - 125, 30, 'marbleatlas', 'DIALOG_MENU_SAM_OFF');
         this.menuSam.animations.add('on', ['DIALOG_MENU_SAM_ON']);
         this.menuSam.animations.add('off', ['DIALOG_MENU_SAM_OFF']);

@@ -14,7 +14,8 @@ define(['phaser'], function(Phaser) {
         },
 
         create: function() {
-            this.game.state.start('level-master');
+            //this.game.state.start('level-master');
+            this.game.state.start('main-intro');
         }
     };
 
