@@ -5,6 +5,8 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         Phaser.Group.call(this, game, parent);
 
         this.levelData = levelData;
+
+        this.status = MarbleMatch.State.INITIAL;
         
         this.matchInfo = [];
         this.marbles = [];
@@ -61,6 +63,11 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
     MarbleMatch.prototype = Object.create(Phaser.Group.prototype);
     MarbleMatch.prototype.constructor = MarbleMatch;
 
+    MarbleMatch.State = {
+        INITIAL: 0,
+        END: 1
+    };
+
     MarbleMatch.Player = {
         ONE: 0,
         TWO: 1
@@ -80,6 +87,9 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
     };
 
     MarbleMatch.prototype.marbleFull = function(loser) {
+        if (this.state === MarbleMatch.State.END) { return; }
+        this.state = MarbleMatch.State.END;
+        
         var winner = (loser + 1) % 2;
         this.matchEnd(winner);
 
