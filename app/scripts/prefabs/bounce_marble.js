@@ -1,6 +1,7 @@
 'use strict';
 
 define(['phaser'], function(Phaser) {
+    // http://jsbin.com/rokelulo/21/edit?js,output
     function BounceMarble(game, parent) {
         Phaser.Group.call(this, game, parent);
 

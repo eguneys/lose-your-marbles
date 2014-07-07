@@ -362,7 +362,7 @@ module.exports = function (grunt) {
             return grunt.task.run(['build', 'connect:dist:keepalive']);
         }
 
-        grunt.task.run([
+        return grunt.task.run([
             'clean:server',
             'concurrent:server',
             'autoprefixer',
