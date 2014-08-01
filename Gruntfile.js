@@ -184,6 +184,27 @@ module.exports = function (grunt) {
                     wrap: true
                     //uglify2: {} // https://github.com/mishoo/UglifyJS2
                 }
+            },
+            lib: {
+                options: {
+                    baseUrl: '<%= yeoman.app %>/scripts',
+                    paths: {
+                        phaser: '../bower_components/phaser-official/build/custom/phaser-arcade-physics'
+
+                    },
+                    shim: {
+                        phaser: {
+                            exports: 'Phaser'
+                        }
+                    },
+                    optimize: 'none',
+                    "include": ["../bower_components/almond/almond", "lib_main"],
+                    "out": "dist/lib/lym.js",
+                    "wrap": {
+                        "startFile": "build/wrap.start",
+                        "endFile": "build/wrap.end"
+                    }
+                }
             }
         },
 
@@ -413,5 +434,9 @@ module.exports = function (grunt) {
         'bower',
         'test',
         'build'
+    ]);
+
+    grunt.registerTask('build:lib', [
+        'requirejs:lib'
     ]);
 };

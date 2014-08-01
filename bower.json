@@ -5,7 +5,8 @@
     "bootstrap": "~3.0.3",
     "requirejs": "~2.1.8",
     "jquery": "~1.10.2",
-    "phaser-official": "dev"
+    "phaser-official": "dev",
+    "almond": "~0.2.9"
   },
   "devDependencies": {}
 }

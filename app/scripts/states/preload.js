@@ -9,8 +9,8 @@ define(['phaser'], function(Phaser) {
             this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             this.game.scale.setScreenSize(true);
             
-            this.game.load.atlas('marbleatlas', 'data/images/sprites/sprites.png', 'data/images/sprites/sprites.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
-            this.game.load.atlas('marbleatlas2', 'data/images/sprites/spritesbg.png', 'data/images/sprites/spritesbg.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+            this.game.load.atlas('marbleatlas', '/data/images/sprites/sprites.png', '/data/images/sprites/sprites.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+            this.game.load.atlas('marbleatlas2', '/data/images/sprites/spritesbg.png', '/data/images/sprites/spritesbg.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
         },
 
         create: function() {
