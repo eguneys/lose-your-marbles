@@ -33,6 +33,19 @@ define(['phaser', 'config',
             game.state.add('level-round', LevelRoundState);
     
             game.state.start('boot');
+
+            this.game = game;
+        },
+
+        goFullScreen: function() {
+            // TODO put somewhere else
+            this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+            
+            if (this.game.scale.isFullScreen) {
+                this.game.scale.stopFullScreen();
+            } else {
+                this.game.scale.startFullScreen();
+            }
         }
     };
 

@@ -5,8 +5,11 @@
     "bootstrap": "~3.0.3",
     "requirejs": "~2.1.8",
     "jquery": "~1.10.2",
-    "phaser-official": "dev",
-    "almond": "~0.2.9"
+    "almond": "~0.2.9",
+    "phaser-official": "~2.0.7"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "resolutions": {
+    "phaser-official": "~2.0.7"
+  }
 }
