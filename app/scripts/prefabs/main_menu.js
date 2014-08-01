@@ -104,7 +104,7 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
         SAM_PRACTICE: 5,
         SAM_1P: 6,
         SAM_2P: 7,
-        SAM_NETWORK: 8,
+        SAM_NETWORK: 8
     };
 
     Menu.Select = {
@@ -178,6 +178,14 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
             this.samIdx = newSamIdx;
             this.menuItems[this.samIdx].animations.play('on');
         }
+    };
+
+    Menu.prototype.getSelection = function() {
+        return this.menuIdx;
+    };
+
+    Menu.prototype.getSam = function() {
+        return this.samIdx;
     };
     
     return Menu;

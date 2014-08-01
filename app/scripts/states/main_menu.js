@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/main_menu', 'prefabs/fade_tween'], function(Phaser, MainMenu, FadeTween) {
+define(['phaser', 'prefabs/main_menu', 'prefabs/options_menu', 'prefabs/fade_tween'], function(Phaser, MainMenu, OptionsMenu, FadeTween) {
     function MainMenuState() {}
     
     MainMenuState.prototype = {
@@ -32,8 +32,34 @@ define(['phaser', 'prefabs/main_menu', 'prefabs/fade_tween'], function(Phaser, M
             this.leftKey.onDown.add(this.menu.select.bind(this.menu, MainMenu.Select.LEFT));
             this.rightKey.onDown.add(this.menu.select.bind(this.menu, MainMenu.Select.RIGHT));
 
-            this.spacebarKey.onDown.add(this.tweenPlayState, this);
-            this.enterKey.onDown.add(this.tweenPlayState, this);
+            this.spacebarKey.onDown.add(this.menuSelect, this);
+            this.enterKey.onDown.add(this.menuSelect, this);
+        },
+
+        menuSelect: function() {
+            switch(this.menu.getSelection()) {
+            case MainMenu.Items.OPTIONS:
+                this.selectOptions();
+                break;
+            case MainMenu.Items.HELP:
+                break;
+            case MainMenu.Items.PLAY, MainMenu.Items.SAM:
+                this.selectPlay();
+                break;
+            case MainMenu.Items.QUIT:
+                break;
+            }
+        },
+
+        selectPlay: function() {
+            this.tweenPlayState();
+        },
+
+        selectOptions: function() {
+            this.optionsMenu = this.optionsMenu ||
+                new OptionsMenu(this.game);
+                
+            this.tweenOptionsMenu();
         },
 
         tweenFadeOut: function() {
@@ -60,8 +86,19 @@ define(['phaser', 'prefabs/main_menu', 'prefabs/fade_tween'], function(Phaser, M
             tweenMainMenuShrink.chain(tweenFadeIn);
 
             tweenMainMenuShrink.start();
+        },
+
+        tweenOptionsMenu: function() {
+            var tweenMainMenuShrink = this.game.add.tween(this.menu.scale)
+                    .to({ x: 0, y: 0}, 200);
+
+            var tweenOptionsMenuGrow = this.game.add.tween(this.optionsMenu.scale)
+                    .to({ x: 1, y: 1}, 200);
+
+            tweenMainMenuShrink.chain(tweenOptionsMenuGrow);
+
+            tweenMainMenuShrink.start();
         }
-            
     };
 
     return MainMenuState;
