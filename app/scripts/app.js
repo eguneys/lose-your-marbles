@@ -1,12 +1,28 @@
 'use strict';
 
-define(['phaser', 'states/boot', 'states/preload', 'states/main_intro', 'states/main_menu', 'states/level_master', 'states/level_intro', 'states/level_round'], function(Phaser, BootState, PreloadState, MainIntroState, MainMenuState, LevelMasterState, LevelIntroState, LevelRoundState) {
-    function Game() { }
+define(['phaser', 'config',
+        'states/boot',
+        'states/preload',
+        'states/main_intro',
+        'states/main_menu',
+        'states/level_master',
+        'states/level_intro',
+        'states/level_round'], function(Phaser, config,
+                                        BootState,
+                                        PreloadState,
+                                        MainIntroState,
+                                        MainMenuState,
+                                        LevelMasterState,
+                                        LevelIntroState,
+                                        LevelRoundState) {
+    function Game(options) {
+        config.options = options || config.options;
+    }
 
     Game.prototype = {
 
         start: function() {
-            var game = new Phaser.Game(640, 480, Phaser.AUTO, 'game-area');
+            var game = new Phaser.Game(640, 480, Phaser.AUTO, config.options.parent);
 
             game.state.add('boot', BootState);
             game.state.add('preload', PreloadState);

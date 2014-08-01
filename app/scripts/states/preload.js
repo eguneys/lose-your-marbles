@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser'], function(Phaser) {
+define(['phaser', 'config'], function(Phaser, config) {
     function Preload() {}
 
     Preload.prototype = {
@@ -8,9 +8,11 @@ define(['phaser'], function(Phaser) {
 
             this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             this.game.scale.setScreenSize(true);
+
+            var paths = config.options.paths;
             
-            this.game.load.atlas('marbleatlas', '/data/images/sprites/sprites.png', '/data/images/sprites/sprites.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
-            this.game.load.atlas('marbleatlas2', '/data/images/sprites/spritesbg.png', '/data/images/sprites/spritesbg.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+            this.game.load.atlas('marbleatlas', paths.sprites + '/sprites.png', paths.sprites + '/sprites.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+            this.game.load.atlas('marbleatlas2', paths.sprites + '/spritesbg.png', paths.sprites + '/spritesbg.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
         },
 
         create: function() {
