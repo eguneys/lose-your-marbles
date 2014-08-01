@@ -3,7 +3,7 @@
 define(['phaser'], function(Phaser) {
     function ToggleSprite(game, x, y, atlas, keyOn, keyOff) {
         Phaser.Sprite.call(this, game, x, y,
-                           atlas, keyOn);
+                           atlas, keyOff);
 
         this.animations.add('on', [keyOn]);
         this.animations.add('off', [keyOff]);

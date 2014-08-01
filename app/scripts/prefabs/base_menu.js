@@ -39,6 +39,8 @@ define(['phaser', 'prefabs/toggle_sprite'], function(Phaser, ToggleSprite) {
         var menuItem = new ToggleSprite(this.game, x, y, atlas, keyOn, keyOff);
         this.add(menuItem);
         this.menuItems[menuIdx] = menuItem;
+
+        return menuItem;
     };
     
     Menu.prototype.getSelection = function() {

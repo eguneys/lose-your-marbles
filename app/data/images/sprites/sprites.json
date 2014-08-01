@@ -2046,7 +2046,7 @@
 		"spriteSourceSize": {"x":0,"y":0,"w":128,"h":30},
 		"sourceSize": {"w":128,"h":30}
     },
-    "OPTIONS_MENU_CREDITS_ON": {
+    "OPTIONS_MENU_CREDITS_OFF": {
 		"frame": {"x":211, "y":2023, "w":128, "h":30},
 		"spriteSourceSize": {"x":0,"y":0,"w":128,"h":30},
 		"sourceSize": {"w":128,"h":30}
@@ -2072,14 +2072,14 @@
 		"sourceSize": {"w":64,"h":35}
     },
     "OPTIONS_MENU_VOLUME_BG": {
-		"frame": {"x":344, "y":1989, "w":86, "h":26},
-		"spriteSourceSize": {"x":0,"y":0,"w":86,"h":26},
-		"sourceSize": {"w":86,"h":26}
+		"frame": {"x":344, "y":1989, "w":90, "h":26},
+		"spriteSourceSize": {"x":0,"y":0,"w":90,"h":26},
+		"sourceSize": {"w":90,"h":26}
     },
     "OPTIONS_MENU_VOLUME_FG": {
-		"frame": {"x":344, "y":2018, "w":75, "h":14},
-		"spriteSourceSize": {"x":0,"y":0,"w":75,"h":14},
-		"sourceSize": {"w":75,"h":14}
+		"frame": {"x":344, "y":2018, "w":80, "h":14},
+		"spriteSourceSize": {"x":0,"y":0,"w":80,"h":14},
+		"sourceSize": {"w":80,"h":14}
     },
     "OPTIONS_MENU_CONTROL_GPAD_ONE": {
 		"frame": {"x":435, "y":1990, "w":52, "h":44},
