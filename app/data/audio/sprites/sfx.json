@@ -1,0 +1,290 @@
+{
+  "resources": [
+    "sfx.ogg",
+    "sfx.m4a",
+    "sfx.mp3",
+    "sfx.ac3"
+  ],
+  "spritemap": {
+    "2": {
+      "start": 8,
+      "end": 8.536054421768707,
+      "loop": false
+    },
+    "4": {
+      "start": 12,
+      "end": 12.450793650793651,
+      "loop": false
+    },
+    "8": {
+      "start": 14,
+      "end": 14.401632653061224,
+      "loop": false
+    },
+    "16": {
+      "start": 0,
+      "end": 0.4016326530612245,
+      "loop": false
+    },
+    "32": {
+      "start": 10,
+      "end": 10.37609977324263,
+      "loop": false
+    },
+    "boxin1": {
+      "start": 2,
+      "end": 2.7666666666666666,
+      "loop": false
+    },
+    "boxin2": {
+      "start": 4,
+      "end": 4.766666666666667,
+      "loop": false
+    },
+    "cantmove": {
+      "start": 6,
+      "end": 6.293174603174603,
+      "loop": false
+    },
+    "BLDIN1": {
+      "start": 16,
+      "end": 16.39832199546485,
+      "loop": false
+    },
+    "BLDIN2": {
+      "start": 18,
+      "end": 18.39832199546485,
+      "loop": false
+    },
+    "BLDIN3": {
+      "start": 20,
+      "end": 20.379954648526077,
+      "loop": false
+    },
+    "BLDOUT1": {
+      "start": 22,
+      "end": 22.379954648526077,
+      "loop": false
+    },
+    "BLDOUT2": {
+      "start": 24,
+      "end": 24.379954648526077,
+      "loop": false
+    },
+    "BLDOUT3": {
+      "start": 26,
+      "end": 27.642267573696145,
+      "loop": false
+    },
+    "BOING": {
+      "start": 29,
+      "end": 29.293174603174602,
+      "loop": false
+    },
+    "BOUNCE": {
+      "start": 31,
+      "end": 31.088367346938774,
+      "loop": false
+    },
+    "BOUNCEIN": {
+      "start": 33,
+      "end": 35.32081632653061,
+      "loop": false
+    },
+    "BOUNCOUT": {
+      "start": 37,
+      "end": 38.07936507936508,
+      "loop": false
+    },
+    "BOXOUT1": {
+      "start": 40,
+      "end": 40.766666666666666,
+      "loop": false
+    },
+    "DISTORT": {
+      "start": 42,
+      "end": 47.36213151927438,
+      "loop": false
+    },
+    "DUMP3": {
+      "start": 49,
+      "end": 49.491950113378685,
+      "loop": false
+    },
+    "DUMP4": {
+      "start": 51,
+      "end": 51.787619047619046,
+      "loop": false
+    },
+    "DUMP5": {
+      "start": 53,
+      "end": 53.90544217687075,
+      "loop": false
+    },
+    "EXPLODE1": {
+      "start": 55,
+      "end": 55.36839002267574,
+      "loop": false
+    },
+    "GO": {
+      "start": 57,
+      "end": 57.8,
+      "loop": false
+    },
+    "HAPPY": {
+      "start": 59,
+      "end": 59.780861678004534,
+      "loop": false
+    },
+    "LEVEL1": {
+      "start": 61,
+      "end": 65.28312925170069,
+      "loop": false
+    },
+    "LEVEL2": {
+      "start": 67,
+      "end": 78.06335600907029,
+      "loop": false
+    },
+    "LEVEL3": {
+      "start": 80,
+      "end": 93.421179138322,
+      "loop": false
+    },
+    "LEVEL4": {
+      "start": 95,
+      "end": 109.5,
+      "loop": false
+    },
+    "LEVEL5": {
+      "start": 111,
+      "end": 123.42956916099773,
+      "loop": false
+    },
+    "LNUP3FST": {
+      "start": 125,
+      "end": 125.02993197278911,
+      "loop": false
+    },
+    "LNUP4FST": {
+      "start": 127,
+      "end": 127.06167800453515,
+      "loop": false
+    },
+    "LNUP5FST": {
+      "start": 129,
+      "end": 129.0845351473923,
+      "loop": false
+    },
+    "LOSS": {
+      "start": 131,
+      "end": 134.57006802721088,
+      "loop": false
+    },
+    "MELT": {
+      "start": 136,
+      "end": 140.26666666666668,
+      "loop": false
+    },
+    "MOVE1": {
+      "start": 142,
+      "end": 142.0456462585034,
+      "loop": false
+    },
+    "MOVE2": {
+      "start": 144,
+      "end": 144.21462585034013,
+      "loop": false
+    },
+    "MOVE3": {
+      "start": 146,
+      "end": 146.15047619047618,
+      "loop": false
+    },
+    "NUSPIN": {
+      "start": 148,
+      "end": 152.01945578231292,
+      "loop": false
+    },
+    "OVER6": {
+      "start": 154,
+      "end": 154.91142857142856,
+      "loop": false
+    },
+    "POOF": {
+      "start": 156,
+      "end": 156.33668934240362,
+      "loop": false
+    },
+    "SAD": {
+      "start": 158,
+      "end": 158.484716553288,
+      "loop": false
+    },
+    "SADRPT": {
+      "start": 160,
+      "end": 160.12843537414966,
+      "loop": false
+    },
+    "SCANIN1": {
+      "start": 162,
+      "end": 164.02607709750566,
+      "loop": false
+    },
+    "SCANIN2": {
+      "start": 166,
+      "end": 167.42526077097506,
+      "loop": false
+    },
+    "SCANIN3": {
+      "start": 169,
+      "end": 172.22380952380954,
+      "loop": false
+    },
+    "SCANOUT1": {
+      "start": 174,
+      "end": 175.3902947845805,
+      "loop": false
+    },
+    "SCANOUT2": {
+      "start": 177,
+      "end": 177.7348299319728,
+      "loop": false
+    },
+    "SELECT2": {
+      "start": 179,
+      "end": 179.10163265306122,
+      "loop": false
+    },
+    "SLAP": {
+      "start": 181,
+      "end": 181.23442176870748,
+      "loop": false
+    },
+    "SQUEEGIE": {
+      "start": 183,
+      "end": 184.9565986394558,
+      "loop": false
+    },
+    "THEME": {
+      "start": 186,
+      "end": 198.75773242630385,
+      "loop": false
+    },
+    "VICTORY": {
+      "start": 200,
+      "end": 205.16063492063492,
+      "loop": false
+    },
+    "WINDOUT1": {
+      "start": 207,
+      "end": 213.0598185941043,
+      "loop": false
+    },
+    "ZOOMIN": {
+      "start": 215,
+      "end": 215.77467120181407,
+      "loop": false
+    }
+  }
+}
