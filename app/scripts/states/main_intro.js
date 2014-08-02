@@ -1,16 +1,19 @@
 'use strict';
 
-define(['phaser', 'prefabs/fade_tween'], function(Phaser, FadeTween) {
+define(['phaser', 'prefabs/fade_tween', 'util'], function(Phaser, FadeTween, Util) {
     function MainIntroState() {}
     
     MainIntroState.prototype = {
         create: function() {
+            this.fx = Util.parseAudioSprite(this.game);
+            
             this.splash = this.game.add.sprite(0, 0, 'marbleatlas2', 'o_splash.png');
             
             this.fadeBg = new FadeTween(this.game, 0xffffff, 1);
             this.game.add.existing(this.fadeBg);
             
             this.tweenFadeState();
+            this.fx.play('THEME');
         },
 
         tweenFadeState: function() {

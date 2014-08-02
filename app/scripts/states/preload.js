@@ -13,6 +13,10 @@ define(['phaser', 'config'], function(Phaser, config) {
             
             this.game.load.atlas('marbleatlas', paths.sprites + '/sprites.png', paths.sprites + '/sprites.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
             this.game.load.atlas('marbleatlas2', paths.sprites + '/spritesbg.png', paths.sprites + '/spritesbg.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+
+
+            this.game.load.json('audiosprite', paths.audio + '/sfx.json');
+            this.game.load.audio('sfx', ['ogg', 'm4a', 'mp3', 'ac3'].mapConcat(paths.audio + '/sfx.'));
         },
 
         create: function() {

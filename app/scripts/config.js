@@ -5,7 +5,8 @@ define([], function() {
         this.options = {
             parent: 'game-area',
             paths: {
-                sprites: '/data/images/sprites'
+                sprites: '/data/images/sprites',
+                audio: '/data/audio/sprites'
             }
         };
     };
