@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite'], function(Phaser, BaseMenu, VolumeSprite) {
+define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefabs/select_sprite'], function(Phaser, BaseMenu, VolumeSprite, SelectSprite) {
     function OptionsMenu(game) {
         BaseMenu.call(this, game, OptionsMenu.Items.MUSIC);
 
@@ -18,6 +18,26 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite'], function(Phaser
         this.addToggleMenuItem(50, 300, 'marbleatlas', 'OPTIONS_MENU_CREDITS_ON', 'OPTIONS_MENU_CREDITS_OFF', OptionsMenu.Items.CREDITS);
         this.addToggleMenuItem(290, 300, 'marbleatlas', 'OPTIONS_MENU_EXIT_ON', 'OPTIONS_MENU_EXIT_OFF', OptionsMenu.Items.EXIT);
 
+        this.p1Controls = new SelectSprite(game, 120, 180, 'marbleatlas', {
+            'keyboard': OptionsMenu.Controls['keyboard'] + 'ONE',
+            'mouse': OptionsMenu.Controls['mouse'],
+            'gpad': OptionsMenu.Controls['gpad'] + 'ONE'
+        }, 'keyboard');
+
+        this.p2Controls = new SelectSprite(game, 210, 220, 'marbleatlas', {
+            'keyboard': OptionsMenu.Controls['keyboard'] + 'TWO',
+            'mouse': OptionsMenu.Controls['mouse'],
+            'gpad': OptionsMenu.Controls['gpad'] + 'TWO'
+        }, 'keyboard');
+
+        this.add(this.p1Controls);
+        this.add(this.p2Controls);
+        
+        this.controls = [
+            this.p1Controls,
+            this.p2Controls
+        ];
+        
         this.musicVolume = new VolumeSprite(game);
         this.musicVolume.x = 200;
         this.musicVolume.y = 95;
@@ -41,6 +61,12 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite'], function(Phaser
         C_P2: 3,
         CREDITS: 4,
         EXIT: 5
+    };
+
+    OptionsMenu.Controls = {
+        'keyboard': 'OPTIONS_MENU_CONTROL_KBOARD_',
+        'mouse': 'OPTIONS_MENU_CONTROL_MOUSE',
+        'gpad': 'OPTIONS_MENU_CONTROL_GPAD_'
     };
 
     OptionsMenu.prototype.select = function(direction) {
@@ -86,9 +112,11 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite'], function(Phaser
                 this.sfxVolume.volumeUp();
             }
             break;
-        case OptionsMenu.Items.C_1P:
+        case OptionsMenu.Items.C_P1:
+            this.controlRotate(0, direction);
             break;
-        case OptionsMenu.Items.C_2P:
+        case OptionsMenu.Items.C_P2:
+            this.controlRotate(1, direction);
             break;
         case OptionsMenu.Items.CREDITS:
             newIdx = OptionsMenu.Items.EXIT;
@@ -99,6 +127,31 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite'], function(Phaser
         }
 
         return newIdx;
+    };
+
+    OptionsMenu.prototype.controlRotate = function(p, direction) {
+        var ctrls = ['keyboard', 'mouse', 'gpad'];
+        
+        var player = this.controls[p];
+        var opponent = this.controls[(p + 1) % 2];
+
+        var newSelection = player.getSelection();
+
+        var idx = ctrls.indexOf(newSelection);
+
+        do {
+            
+            if (direction === BaseMenu.Select.LEFT) {
+                idx = (idx + 2) % 3;
+            } else {
+                idx = (idx + 1) % 3;
+            }
+
+            newSelection = ctrls[idx];
+            
+        } while (newSelection === opponent.getSelection() && newSelection === 'mouse');
+
+        player.select(newSelection);
     };
     
     return OptionsMenu;

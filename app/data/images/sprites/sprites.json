@@ -2101,7 +2101,7 @@
 		"spriteSourceSize": {"x":0,"y":0,"w":75,"h":36},
 		"sourceSize": {"w":75,"h":36}
     },
-    "OPTIONS_MENU_CONTROL_MPAD": {
+    "OPTIONS_MENU_CONTROL_MOUSE": {
 		"frame": {"x":541, "y":1990, "w":54, "h":44},
 		"spriteSourceSize": {"x":0,"y":0,"w":54,"h":44},
 		"sourceSize": {"w":54,"h":44}
