@@ -2,9 +2,11 @@
 
 define(['phaser'], function(Phaser) {
     
-    function RedMarble(game, parent) {
+    function RedMarble(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
 
+        this.fx = fx;
+        
         this.redPoint = this.create(0, 0, 'marbleatlas', 'DIALOG_RED_POINT1');
         this.redPoint.animations
             .add('point', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].mapConcat('DIALOG_RED_POINT'),
@@ -75,6 +77,45 @@ define(['phaser'], function(Phaser) {
     RedMarble.prototype.clearQuitHands = function() {
         this.redRightHand.alpha = 0;
         this.redLeftHand.alpha = 0;
+    };
+
+    RedMarble.prototype.playSoundPlay = function() {
+        this.currentSound = 'BOING';
+        this.loopSound = 'BOING';
+        this.soundTimer = 1200;
+        this.soundInitial = true;
+    };
+
+    RedMarble.prototype.playSoundSad = function() {
+        this.currentSound = 'SAD';
+        this.loopSound = 'SADRPT';
+        this.soundTimer = 1200;
+        this.soundInitial = true;
+    };
+
+    RedMarble.prototype.playSoundSmack = function() {
+        this.currentSound = 'SMACK';
+        this.soundInitial = true;
+    };
+
+    RedMarble.prototype.stopSound = function() {
+        this.currentSound = '';
+    };
+
+    RedMarble.prototype.update = function() {
+        if (this.currentSound !== '') {
+            if (this.soundInitial) {
+                this.soundInitial = false;
+                this.fx.play(this.currentSound);
+            } else if (this.loopSound != '') {
+                this.soundTimer -= this.game.time.elapsed;
+
+                if (this.soundTimer <= 0) {
+                    this.soundTimer = 1000;
+                    this.fx.play(this.loopSound);
+                }
+            }
+        }
     };
 
     return RedMarble;

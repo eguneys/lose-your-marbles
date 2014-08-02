@@ -1,16 +1,18 @@
 'use strict';
 
-define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_menu', 'prefabs/fade_tween'], function(Phaser, BaseMenu, MainMenu, OptionsMenu, FadeTween) {
+define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_menu', 'prefabs/fade_tween', 'util'], function(Phaser, BaseMenu, MainMenu, OptionsMenu, FadeTween, Util) {
     function MainMenuState() {}
     
     MainMenuState.prototype = {
         create: function() {
+            this.fx = Util.parseAudioSprite(this.game);
+            
             this.background = this.game.add.sprite(0, 0, 'marbleatlas', 'DIALOG_BG');
             
             this.fadeBg = new FadeTween(this.game, 0xffffff, 1);
             this.game.add.existing(this.fadeBg);
 
-            this.menu = new MainMenu(this.game);
+            this.menu = new MainMenu(this.game, this.fx);
 
             this.optionsMenu = null;
 
@@ -45,6 +47,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
         keyPress: function(key) {
             if (this.menuFocus === 'main') {
                 this.menu.select(key);
+                this.menu.playSound();
             } else if (this.menuFocus === 'options') {
                 this.optionsMenu.select(key);
             }
@@ -65,7 +68,8 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
                 break;
             case MainMenu.Items.HELP:
                 break;
-            case MainMenu.Items.PLAY, MainMenu.Items.SAM:
+            case MainMenu.Items.PLAY:
+            case MainMenu.Items.SAM:
                 this.selectPlay();
                 break;
             case MainMenu.Items.QUIT:
@@ -85,6 +89,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
 
         selectPlay: function() {
             this.tweenPlayState();
+            this.fx.play('ZOOMIN');
         },
 
         selectOptions: function() {
@@ -102,6 +107,10 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
 
             var tweenMainMenuPop = this.game.add.tween(this.menu.scale)
                     .to({x: 1, y: 1}, 500, Phaser.Easing.Bounce.Out);
+
+            tween.onComplete.add(function() {
+                this.fx.play('ZOOMIN');
+            }, this);
 
             tweenMainMenuPop.onComplete.add(this.menuPopped, this);
             
@@ -132,10 +141,14 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
 
         tweenTransitionMenu: function(shrinkMenu, growMenu, onCompleteFocus) {
             var tweenMenuShrink = this.game.add.tween(shrinkMenu.scale)
-                    .to({ x: 0, y: 0}, 200);
+                    .to({ x: 0, y: 0}, 300);
 
             var tweenMenuGrow = this.game.add.tween(growMenu.scale)
-                    .to({ x: 1, y: 1}, 200);
+                    .to({ x: 1, y: 1}, 300, Phaser.Easing.Bounce.Out);
+
+            tweenMenuShrink.onComplete.add(function() {
+                this.fx.play('ZOOMIN');
+            }, this);
 
             tweenMenuGrow.onComplete.add(function() {
                 this.menuFocus = onCompleteFocus;
@@ -144,6 +157,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
             tweenMenuShrink.chain(tweenMenuGrow);
 
             tweenMenuShrink.start();
+            this.fx.play('ZOOMIN');
         }
     };
 

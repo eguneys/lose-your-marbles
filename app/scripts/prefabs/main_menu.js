@@ -2,8 +2,10 @@
 
 define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
     
-    function Menu(game) {
+    function Menu(game, fx) {
         Phaser.Group.call(this, game);
+
+        this.fx = fx;
 
         this.menuItems = [];
         this.menuIdx = Menu.Items.PLAY;
@@ -70,7 +72,7 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
         
         this.menuItems[Menu.Items.QUIT] = this.menuQuit;
         
-        this.redMarble = new RedMarble(this.game, this);
+        this.redMarble = new RedMarble(this.game, this, this.fx);
         
         this.redMarble.x = this.menuItems[this.menuIdx].x - this.redMarble.width;
         this.redMarble.y = this.menuItems[this.menuIdx].y - 40;
@@ -165,12 +167,15 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
                 // fix y offset due to jumping spritesheet
                 this.redMarble.y = this.menuItems[this.menuIdx].y - 40;
                 this.redMarble.playPlay();
+                this.redMarble.playSoundPlay();
             } else if (this.menuIdx === Menu.Items.QUIT) {
                 this.redMarble.y = this.menuItems[this.menuIdx].y - 10;
                 this.redMarble.playQuit();
+                this.redMarble.playSoundSad();
             } else {
                 this.redMarble.y = this.menuItems[this.menuIdx].y - 10;
                 this.redMarble.playPoint();
+                this.redMarble.stopSound();
             }
             this.redMarble.x = this.menuItems[this.menuIdx].x - this.redMarble.width;
         } else if (newSamIdx !== this.samIdx) {
@@ -178,6 +183,10 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
             this.samIdx = newSamIdx;
             this.menuItems[this.samIdx].animations.play('on');
         }
+    };
+
+    Menu.prototype.playSound = function() {
+        this.fx.play('SELECT2');
     };
 
     Menu.prototype.getSelection = function() {
