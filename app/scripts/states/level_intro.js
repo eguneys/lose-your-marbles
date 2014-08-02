@@ -76,7 +76,7 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
             
             var tweenFadeOut = this.game.add.tween(this.fadeBg)
                 .to({alpha: 0}, 2000, Phaser.Easing.Linear.None);
-
+            
             var drawTweens = this.foreground.getDrawTweens();
 
             tweenLevelSplash.chain(tweenFadeOut);

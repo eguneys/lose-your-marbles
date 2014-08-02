@@ -18,15 +18,15 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite'], function(Phaser
         this.addToggleMenuItem(50, 300, 'marbleatlas', 'OPTIONS_MENU_CREDITS_ON', 'OPTIONS_MENU_CREDITS_OFF', OptionsMenu.Items.CREDITS);
         this.addToggleMenuItem(290, 300, 'marbleatlas', 'OPTIONS_MENU_EXIT_ON', 'OPTIONS_MENU_EXIT_OFF', OptionsMenu.Items.EXIT);
 
-        var musicVolume = new VolumeSprite(game);
-        musicVolume.x = 200;
-        musicVolume.y = 95;
-        this.add(musicVolume);
+        this.musicVolume = new VolumeSprite(game);
+        this.musicVolume.x = 200;
+        this.musicVolume.y = 95;
+        this.add(this.musicVolume);
 
-        var sfxVolume = new VolumeSprite(game);
-        sfxVolume.x = 200;
-        sfxVolume.y = 125;
-        this.add(sfxVolume);
+        this.sfxVolume = new VolumeSprite(game);
+        this.sfxVolume.x = 200;
+        this.sfxVolume.y = 125;
+        this.add(this.sfxVolume);
 
         musicItem.play('on');
     };
@@ -73,8 +73,18 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite'], function(Phaser
 
         switch(newIdx) {
         case OptionsMenu.Items.MUSIC:
+            if (direction === BaseMenu.Select.LEFT) {
+                this.musicVolume.volumeDown();
+            } else {
+                this.musicVolume.volumeUp();
+            }
             break;
         case OptionsMenu.Items.SFX:
+            if (direction === BaseMenu.Select.LEFT) {
+                this.sfxVolume.volumeDown();
+            } else {
+                this.sfxVolume.volumeUp();
+            }
             break;
         case OptionsMenu.Items.C_1P:
             break;

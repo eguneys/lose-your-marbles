@@ -14,7 +14,7 @@ define(['phaser'], function(Phaser) {
         this.foreground = this.create(0, 0, 'marbleatlas2', 'LEVEL' + this.level + 'BG.png');
 
         this.foregroundMask = new RectGroup(this.game);
-        
+
         this.foreground.mask = this.foregroundMask;
     }
 
@@ -108,6 +108,11 @@ define(['phaser'], function(Phaser) {
 
         this.rects = [];
         this.lastRect = null;
+
+        // TODO
+        // fixes initial masking issue introduced in 2.0.7
+        this.beginFill(0xffffff);
+        this.drawRect(0, 0, 1, 1);
     }
 
     RectGroup.prototype = Object.create(Phaser.Graphics.prototype);
