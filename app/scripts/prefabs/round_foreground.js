@@ -1,20 +1,22 @@
 'use strict';
 
 define(['phaser', 'prefabs/round_splash', 'prefabs/blue_number'], function(Phaser, RoundSplash, BlueNumber) {
-    function RoundForeground(game, round, parent) {
+    function RoundForeground(game, round, parent, fx) {
         Phaser.Group.call(this, game, parent);
+
+        this.fx = fx;
         
         this.roundSplash = new RoundSplash(this.game, round, this);
 
         this.roundSplash.x = (this.game.width - this.roundSplash.width) / 2;
         this.roundSplash.y = (this.game.height / 2) - this.roundSplash.height;
         
-        this.countdown1 = new BlueNumber(this.game, this);
+        this.countdown1 = new BlueNumber(this.game, this, this.fx);
         this.countdown1.alpha = 0;
         this.countdown1.x = 130;
         this.countdown1.y = 60;
 
-        this.countdown2 = new BlueNumber(this.game, this);
+        this.countdown2 = new BlueNumber(this.game, this, this.fx);
         this.countdown2.alpha = 0;
         this.countdown2.x = 640 - 130;
         this.countdown2.y = 60;
@@ -39,9 +41,15 @@ define(['phaser', 'prefabs/round_splash', 'prefabs/blue_number'], function(Phase
         if (this.counter > 0) {
             this.countdown1.show(this.counter);
             this.countdown2.show(this.counter);
+
+            this.countdown1.playSound();
+            this.countdown2.playSound();
         } else if (this.counter === 0) {
             this.countdown1.show('go');
             this.countdown2.show('go');
+
+            this.countdown1.playSoundGo();
+            this.countdown2.playSoundGo();
         } else {
             if (this._onGoCallback) {
                 this._onGoCallback.call(this._onGoCallbackContext, this);
@@ -49,6 +57,6 @@ define(['phaser', 'prefabs/round_splash', 'prefabs/blue_number'], function(Phase
         }
         --this.counter;
     };
-
+    
     return RoundForeground;
 });

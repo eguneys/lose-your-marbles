@@ -1,8 +1,10 @@
 'use strict';
 
 define(['phaser'], function(Phaser) {
-    function BlueNumber(game, parent) {
+    function BlueNumber(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
+
+        this.fx = fx;
 
         this.digit = this.create(0, 0, 'marbleatlas', 'COMMON03_DIGIT_0');
         this.digit.animations.add('0', ['COMMON03_DIGIT_0']);
@@ -37,6 +39,14 @@ define(['phaser'], function(Phaser) {
         this.digit.play(number + '');
         
         this.pivot = { x: this.width / 2, y: this.height / 2 };
+    };
+
+    BlueNumber.prototype.playSound = function() {
+        this.fx.play('SELECT2');
+    };
+
+    BlueNumber.prototype.playSoundGo = function() {
+        this.fx.play('GO');
     };
     
     return BlueNumber;

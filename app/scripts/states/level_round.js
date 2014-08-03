@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai'], function(Phaser, LevelMasterState, RoundForeground, MarbleGroup, MarbleMatch, BotAI) {
+define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai', 'util'], function(Phaser, LevelMasterState, RoundForeground, MarbleGroup, MarbleMatch, BotAI, Util) {
     function LevelRoundState() {}
 
     LevelRoundState.prototype = {
@@ -10,13 +10,15 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
         },
         
         create: function() {
+            this.fx = Util.parseAudioSprite(this.game);
+            
             var level = this.levelData.level;
             
             this.renderLayer = this.game.add.group();
             
             this.background = this.game.add.sprite(0, 0, 'marbleatlas2', 'LEVEL' + level + 'BG.png', this.renderLayer);
 
-            this.foreground = new RoundForeground(this.game, this.levelData.round, this.renderLayer);
+            this.foreground = new RoundForeground(this.game, this.levelData.round, this.renderLayer, this.fx);
 
             this.match = new MarbleMatch(this.game, this.levelData, this.renderLayer);
             this.match.x = 53;
