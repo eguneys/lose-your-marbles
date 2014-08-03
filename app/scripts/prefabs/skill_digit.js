@@ -1,8 +1,10 @@
 'use strict';
 
 define(['phaser'], function(Phaser) {
-    function SkillDigit(game, x, y, digit) {
+    function SkillDigit(game, x, y, digit, fx) {
         this.digit = digit;
+
+        this.fx = fx;
 
         this.preFrame = 'COMMON04_DIGITS' + digit;
         
@@ -24,6 +26,10 @@ define(['phaser'], function(Phaser) {
     SkillDigit.prototype.whirl = function() {
         this.animations.play('whirl');
     };
+
+    SkillDigit.prototype.playWhirlSound = function() {
+        this.fx.play('NUSPIN');
+    };
     
     SkillDigit.prototype.whirlDecrease = function() {
         var anim = this.animations.currentAnim;
@@ -32,7 +38,7 @@ define(['phaser'], function(Phaser) {
             anim.stop(false, false);
             this.onWhirlDone.dispatch();
         } else {
-            anim.play(anim.speed - 26);
+            anim.play(anim.speed - 26); // * 0.98076923076923120);
         }
     };
 

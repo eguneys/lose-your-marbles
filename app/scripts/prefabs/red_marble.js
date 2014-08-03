@@ -93,8 +93,8 @@ define(['phaser'], function(Phaser) {
         this.soundInitial = true;
     };
 
-    RedMarble.prototype.playSoundSmack = function() {
-        this.currentSound = 'SMACK';
+    RedMarble.prototype.playSoundHappy = function() {
+        this.currentSound = 'HAPPY';
         this.soundInitial = true;
     };
 

@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_foreground', 'prefabs/skill_menu'], function(Phaser, LevelMasterState, FadeTween, LevelSplash, LevelForeground, SkillMenu) {
+define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_foreground', 'prefabs/skill_menu', 'util'], function(Phaser, LevelMasterState, FadeTween, LevelSplash, LevelForeground, SkillMenu, Util) {
     function LevelIntroState() {}
 
     LevelIntroState.prototype = {
@@ -10,11 +10,13 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
         },
         
         create: function() {
+            this.fx = Util.parseAudioSprite(this.game);
+            
             var level = this.levelData.level;
             
             this.background = this.game.add.sprite(0, 0, 'marbleatlas2', 'TRANS' + level + 'B.png');
 
-            this.foreground = new LevelForeground(this.game, level);
+            this.foreground = new LevelForeground(this.game, level, this.fx);
             
             this.fadeBg = new FadeTween(this.game, 0xffffff, 1);
             this.game.add.existing(this.fadeBg);
@@ -27,8 +29,9 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
             var tweenIntro = this.tweenIntro();
             
             if (this.levelData.level === 1) {
-            
-                this.skillMenu = new SkillMenu(this.game);
+
+                // parent undefined, added to the game world.
+                this.skillMenu = new SkillMenu(this.game, undefined, this.fx);
             
                 this.skillMenu.x = this.game.width / 4 - 30;
                 this.skillMenu.y = this.game.height / 2;
@@ -40,7 +43,10 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
                 
                 tweenIntro.chain(tweenSkillMenuPop);
 
-
+                tweenSkillMenuPop.onStart.add(function() {
+                    this.fx.play('ZOOMIN');
+                }, this);
+                
                 this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
                 this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
                 this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
@@ -57,17 +63,25 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
         },
         
         skillMenuPopped: function() {
-            this.upKey.onDown.add(this.skillMenu.navigate.bind(this.skillMenu, SkillMenu.Select.UP));
-            this.downKey.onDown.add(this.skillMenu.navigate.bind(this.skillMenu, SkillMenu.Select.DOWN));
+            this.upKey.onDown.add(this.skillMenuNavigate.bind(this, SkillMenu.Select.UP));
+            this.downKey.onDown.add(this.skillMenuNavigate.bind(this, SkillMenu.Select.DOWN));
             this.enterKey.onDown.add(this.skillMenu.select, this.skillMenu);
             this.spacebarKey.onDown.add(this.skillMenu.select, this.skillMenu);
             
+        },
+
+        skillMenuNavigate: function(direction) {
+            if (this.skillMenu.navigate(direction) != -1) {
+                this.skillMenu.playNavigateSound();
+            }
         },
 
         skillMenuSelected: function(skill) {
             this.levelData.players[0].skill = skill;
             
             this.tweenSkillMenuShrink();
+
+            this.fx.play('ZOOMIN');
         },
         
         tweenIntro: function() {
@@ -81,6 +95,10 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
 
             tweenLevelSplash.chain(tweenFadeOut);
             tweenFadeOut.chain(drawTweens.first);
+
+            tweenFadeOut.onComplete.add(function() {
+                this.foreground.playDrawSound();
+            }, this);
 
             return drawTweens.last;
         },

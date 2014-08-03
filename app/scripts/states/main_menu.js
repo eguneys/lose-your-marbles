@@ -46,16 +46,20 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
 
         keyPress: function(key) {
             if (this.menuFocus === 'main') {
-                this.menu.select(key);
-                this.menu.playSound();
+                if (this.menu.select(key) !== -1) {
+                    this.menu.playSelectSound();
+                }
             } else if (this.menuFocus === 'options') {
-                this.optionsMenu.select(key);
+                if (this.optionsMenu.select(key) !== -1) {
+                    this.menu.stopSound();
+                }
             }
         },
 
         keyEnter: function() {
             if (this.menuFocus === 'main') {
                 this.mainMenuSelect();
+                this.menu.doSelect();
             } else if (this.menuFocus === 'options') {
                 this.optionsMenuSelect();
             }
@@ -88,6 +92,8 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
         },
 
         selectPlay: function() {
+            if (!this.menu.allowSelect) return;
+            
             this.tweenPlayState();
             this.fx.play('ZOOMIN');
         },
@@ -108,7 +114,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
             var tweenMainMenuPop = this.game.add.tween(this.menu.scale)
                     .to({x: 1, y: 1}, 500, Phaser.Easing.Bounce.Out);
 
-            tween.onComplete.add(function() {
+            tweenMainMenuPop.onStart.add(function() {
                 this.fx.play('ZOOMIN');
             }, this);
 
@@ -146,7 +152,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
             var tweenMenuGrow = this.game.add.tween(growMenu.scale)
                     .to({ x: 1, y: 1}, 300, Phaser.Easing.Bounce.Out);
 
-            tweenMenuShrink.onComplete.add(function() {
+            tweenMenuGrow.onStart.add(function() {
                 this.fx.play('ZOOMIN');
             }, this);
 

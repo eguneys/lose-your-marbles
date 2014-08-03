@@ -1,9 +1,11 @@
 'use strict';
 
 define(['phaser'], function(Phaser) {
-    function LevelForeground(game, level) {
+    function LevelForeground(game, level, fx) {
         Phaser.Group.call(this, game);
 
+        this.fx = fx;
+        
         this.level = level;
         
         this.rect1 = new Phaser.Rectangle(10, 0, 180, 480);
@@ -32,12 +34,20 @@ define(['phaser'], function(Phaser) {
         return { first: tween1.first, last: tween2.last };
     };
 
+    LevelForeground.prototype.playDrawSound = function() {
+        this.fx.play('LEVEL1');
+    };
+
     LevelForeground.prototype.updateMask = function() {
         this.foregroundMask.updateLines();
     };
 
     LevelForeground.prototype.tweenRect = function(rect) {
 
+        var shortTime = 220;
+        var longTime = shortTime * 2.5;
+
+        
         var thickness = 70;
         
         var line1 = new Phaser.Rectangle(rect.left, rect.top, thickness, 0);
@@ -50,42 +60,42 @@ define(['phaser'], function(Phaser) {
         this.foregroundMask.addRect(line1);
         
         var tween1 = this.game.add.tween(line1)
-            .to({ height: rect.height }, 1000);
+            .to({ height: rect.height }, longTime);
         
         tween1.onComplete.add(function() {
             this.foregroundMask.addRect(line2);
         }, this);
 
         var tween2 = this.game.add.tween(line2)
-            .to({ width: rect.width } , 300);
+            .to({ width: rect.width } , shortTime);
 
         tween2.onComplete.add(function() {
             this.foregroundMask.addRect(line3);
         }, this);
         
         var tween3 = this.game.add.tween(line3)
-            .to({ height: - (rect.height - thickness) }, 1000);
+            .to({ height: - (rect.height - thickness) }, longTime);
 
         tween3.onComplete.add(function() {
             this.foregroundMask.addRect(line4);
         }, this);
         
         var tween4 = this.game.add.tween(line4)
-            .to({ width: - (rect.width - thickness) }, 300);
+            .to({ width: - (rect.width - thickness) }, shortTime);
 
         tween4.onComplete.add(function() {
             this.foregroundMask.addRect(line5);
         }, this);
         
         var tween5 = this.game.add.tween(line5)
-            .to({ width: rect.width - thickness}, 300);
+            .to({ width: rect.width - thickness}, shortTime);
 
         tween5.onComplete.add(function() {
             this.foregroundMask.addRect(line6);
         }, this);
         
         var tween6 = this.game.add.tween(line6)
-            .to({ width: rect.width - thickness}, 300);
+            .to({ width: rect.width - thickness}, shortTime);
         
         tween1.chain(tween2);
         tween2.chain(tween3);

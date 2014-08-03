@@ -7,6 +7,8 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
 
         this.fx = fx;
 
+        this.allowSelect = true;
+        
         this.menuItems = [];
         this.menuIdx = Menu.Items.PLAY;
         this.samIdx = Menu.Items.SAM_1P;
@@ -117,6 +119,8 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
     };
 
     Menu.prototype.select = function(direction) {
+        if (!this.allowSelect) { return -1; }
+        
         var newIdx = this.menuIdx;
         var newSamIdx = this.samIdx;
 
@@ -183,10 +187,21 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
             this.samIdx = newSamIdx;
             this.menuItems[this.samIdx].animations.play('on');
         }
+
+        return this.menuIdx;
     };
 
-    Menu.prototype.playSound = function() {
+    Menu.prototype.doSelect = function() {
+        this.allowSelect = false;
+        this.stopSound();
+    };
+
+    Menu.prototype.playSelectSound = function() {
         this.fx.play('SELECT2');
+    };
+
+    Menu.prototype.stopSound = function() {
+        this.redMarble.stopSound();
     };
 
     Menu.prototype.getSelection = function() {

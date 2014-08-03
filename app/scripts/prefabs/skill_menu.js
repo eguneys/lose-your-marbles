@@ -1,9 +1,11 @@
 'use strict';
 
 define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser, RedMarble, SkillDigit) {
-    function SkillMenu(game, parent) {
+    function SkillMenu(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
 
+        this.fx = fx;
+        
         this.allowSelect = true;
         
         this.menuItems = [];
@@ -14,9 +16,9 @@ define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser,
         var menuWidth = this.menuBg.width;
         var menuHeight = this.menuBg.height;
         
-        this.itemOne = new SkillDigit(this.game, this.menuBg.x + menuWidth / 2 - 5, 70, 1);
-        this.itemTwo = new SkillDigit(this.game, this.menuBg.x + menuWidth / 2 - 5, 70 + 80, 2);
-        this.itemThree = new SkillDigit(this.game, this.menuBg.x + menuWidth / 2 - 5, 70 + 80 + 80, 3);
+        this.itemOne = new SkillDigit(this.game, this.menuBg.x + menuWidth / 2 - 5, 70, 1, this.fx);
+        this.itemTwo = new SkillDigit(this.game, this.menuBg.x + menuWidth / 2 - 5, 70 + 80, 2, this.fx);
+        this.itemThree = new SkillDigit(this.game, this.menuBg.x + menuWidth / 2 - 5, 70 + 80 + 80, 3, this.fx);
 
         this.add(this.itemOne);
         this.add(this.itemTwo);
@@ -31,7 +33,7 @@ define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser,
         this.menuItems[SkillMenu.Items.THREE] = this.itemThree;
 
 
-        this.redMarble = new RedMarble(this.game, this);
+        this.redMarble = new RedMarble(this.game, this, this.fx);
         this.redMarble.x = this.menuItems[this.menuIdx].x - this.redMarble.width;
         this.redMarble.y = this.menuItems[this.menuIdx].y - 10;
         
@@ -57,7 +59,7 @@ define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser,
     };
 
     SkillMenu.prototype.navigate = function(direction) {
-        if (!this.allowSelect) { return; }
+        if (!this.allowSelect) { return -1; }
         
         var newIdx = this.menuIdx;
         
@@ -75,15 +77,22 @@ define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser,
 
             this.redMarble.y = this.menuItems[this.menuIdx].y - 10;
         }
+
+        return this.menuIdx;
     };
 
     SkillMenu.prototype.select = function() {
-        if (!this.allowSelect) { return; }
+        if (!this.allowSelect) { return -1; }
         this.allowSelect = false;
         
         this.redMarble.playSmack();
+        this.redMarble.playSoundHappy();
+        
         this.game.time.events.add(Phaser.Timer.SECOND * 14/15, function() {
             this.menuItems[this.menuIdx].whirl();
+            this.fx.play('SLAP').onStop.addOnce(function() {
+                this.menuItems[this.menuIdx].playWhirlSound();
+            }, this);
 
             for (var i = (this.menuIdx + 1) % 3; i !== this.menuIdx; i = (i + 1) % 3) {
                 this.menuItems[i].alpha = 0;
@@ -91,6 +100,10 @@ define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser,
         }, this);
 
         return this.getSelectedItem();
+    };
+
+    SkillMenu.prototype.playNavigateSound = function() {
+        this.fx.play('SELECT2');
     };
 
     SkillMenu.prototype.selectDone = function() {
