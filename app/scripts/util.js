@@ -25,7 +25,7 @@ define([], function() {
         for (var sprite in audiosprite.spritemap) {
             var start = audiosprite.spritemap[sprite].start;
             var end = audiosprite.spritemap[sprite].end;
-            var loop = audiosprite.spritemap[sprite].loop;
+            //var loop = audiosprite.spritemap[sprite].loop;
 
             fx.addMarker(sprite, start, end - start);
         }

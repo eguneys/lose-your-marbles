@@ -45,6 +45,8 @@ define(['phaser', 'prefabs/marble', 'bot/strat', 'bot/quick_strat', 'bot/qrandom
     };
 
     BotAI.prototype.buildStrat = function(state) {
+        state = 'jshint';
+        
         var strat = BotAI.Strat.QUICK_RANDOM;
         
         switch (strat) {
@@ -52,6 +54,8 @@ define(['phaser', 'prefabs/marble', 'bot/strat', 'bot/quick_strat', 'bot/qrandom
             return new QuickStrat(this.focus);
         case BotAI.Strat.QUICK_RANDOM:
             return new QuickRandomStrat(this.focus);
+        default:
+            return 0;
         }
     };
     

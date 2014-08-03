@@ -71,7 +71,7 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
         },
 
         skillMenuNavigate: function(direction) {
-            if (this.skillMenu.navigate(direction) != -1) {
+            if (this.skillMenu.navigate(direction) !== -1) {
                 this.skillMenu.playNavigateSound();
             }
         },

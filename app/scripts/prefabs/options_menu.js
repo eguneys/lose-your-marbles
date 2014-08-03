@@ -5,7 +5,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefabs/select_
         BaseMenu.call(this, game, parent, OptionsMenu.Items.MUSIC);
 
         var centerX = this.menuBg.width / 2;
-        var centerY = this.menuBg.height / 2;
+        //var centerY = this.menuBg.height / 2;
         
         var optionsTitle = this.create(0, 50, 'marbleatlas', 'DIALOG_MENU_OPTIONS_ON');
         optionsTitle.x = centerX - optionsTitle.width / 2;
@@ -19,15 +19,15 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefabs/select_
         this.addToggleMenuItem(290, 300, 'marbleatlas', 'OPTIONS_MENU_EXIT_ON', 'OPTIONS_MENU_EXIT_OFF', OptionsMenu.Items.EXIT);
 
         this.p1Controls = new SelectSprite(game, 120, 180, 'marbleatlas', {
-            'keyboard': OptionsMenu.Controls['keyboard'] + 'ONE',
-            'mouse': OptionsMenu.Controls['mouse'],
-            'gpad': OptionsMenu.Controls['gpad'] + 'ONE'
+            'keyboard': OptionsMenu.Controls.keyboard + 'ONE',
+            'mouse': OptionsMenu.Controls.mouse,
+            'gpad': OptionsMenu.Controls.gpad + 'ONE'
         }, 'keyboard');
 
         this.p2Controls = new SelectSprite(game, 210, 220, 'marbleatlas', {
-            'keyboard': OptionsMenu.Controls['keyboard'] + 'TWO',
-            'mouse': OptionsMenu.Controls['mouse'],
-            'gpad': OptionsMenu.Controls['gpad'] + 'TWO'
+            'keyboard': OptionsMenu.Controls.keyboard + 'TWO',
+            'mouse': OptionsMenu.Controls.mouse,
+            'gpad': OptionsMenu.Controls.gpad + 'TWO'
         }, 'keyboard');
 
         this.add(this.p1Controls);
@@ -49,7 +49,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefabs/select_
         this.add(this.sfxVolume);
 
         musicItem.play('on');
-    };
+    }
 
     OptionsMenu.prototype = Object.create(BaseMenu.prototype);
     OptionsMenu.prototype.constructor = OptionsMenu;

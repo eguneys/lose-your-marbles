@@ -9,7 +9,7 @@ define([], function() {
                 audio: '/data/audio/sprites'
             }
         };
-    };
+    }
     
     return new Config();
 });

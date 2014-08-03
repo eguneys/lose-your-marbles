@@ -7,10 +7,10 @@ define(['phaser', 'prefabs/base_menu'], function(Phaser, BaseMenu) {
 
         this.fx = fx;
         
-        var yesItem = this.addToggleMenuItem(30, 100, 'marbleatlas', 'COMMON03_TEXT_YES_ON', 'COMMON03_TEXT_YES_OFF', PauseMenu.Items.YES);
-        var noItem = this.addToggleMenuItem(105, 100, 'marbleatlas', 'COMMON03_TEXT_NO_ON', 'COMMON03_TEXT_NO_OFF', PauseMenu.Items.NO);
+        this.yesItem = this.addToggleMenuItem(30, 100, 'marbleatlas', 'COMMON03_TEXT_YES_ON', 'COMMON03_TEXT_YES_OFF', PauseMenu.Items.YES);
+        this.noItem = this.addToggleMenuItem(105, 100, 'marbleatlas', 'COMMON03_TEXT_NO_ON', 'COMMON03_TEXT_NO_OFF', PauseMenu.Items.NO);
         
-        noItem.play('on');
+        this.noItem.play('on');
     }
 
     PauseMenu.prototype = Object.create(BaseMenu.prototype);

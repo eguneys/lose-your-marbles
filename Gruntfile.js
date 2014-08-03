@@ -198,11 +198,11 @@ module.exports = function (grunt) {
                         }
                     },
                     optimize: 'none',
-                    "include": ["../bower_components/almond/almond", "lib_main"],
-                    "out": "dist/lib/lym.js",
-                    "wrap": {
-                        "startFile": "build/wrap.start",
-                        "endFile": "build/wrap.end"
+                    'include': ['../bower_components/almond/almond', 'lib_main'],
+                    'out': 'dist/lib/lym.js',
+                    'wrap': {
+                        'startFile': 'build/wrap.start',
+                        'endFile': 'build/wrap.end'
                     }
                 }
             }

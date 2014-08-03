@@ -50,7 +50,7 @@ define(['phaser'], function(Phaser) {
         // TODO Too much sound caused by Physics bug
         if (physics.z === 0 && marble.y > -220) {
             this.playSoundBounce();
-        };
+        }
     };
 
     BounceMarble.prototype.playSoundBounce = function() {

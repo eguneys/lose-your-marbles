@@ -4,7 +4,6 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
     function MainMenuState() {}
 
     MainMenuState.States = {
-        INTRO: 'intro',
         MAIN: 'main',
         OPTIONS: 'options',
         TRANSITION: 'transition'
@@ -23,7 +22,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
 
             this.optionsMenu = null;
 
-            this.menuState = MainMenuState.States.INTRO;
+            this.menuState = MainMenuState.States.TRANSITION;
             
             this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
             this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -100,6 +99,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
         },
 
         selectPlay: function() {
+            this.menuState = MainMenuState.States.TRANSITION;
             this.tweenPlayState();
             this.fx.play('ZOOMIN');
         },

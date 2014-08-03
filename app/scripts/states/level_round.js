@@ -149,7 +149,7 @@ define(['phaser',
                 this.roundEnd(this.roundWinner);
             } else if (this.roundState === LevelRoundState.States.PLAYING) {
                 this.match.handleInput(sender, direction);
-            } else if (this.roundState == LevelRoundState.States.PAUSED) {
+            } else if (this.roundState === LevelRoundState.States.PAUSED) {
                 if (direction === MarbleGroup.Input.SHIFT) {
                     this.handleEnter();
                     return;
@@ -172,7 +172,7 @@ define(['phaser',
         handlePause: function() {
             if (this.roundState === LevelRoundState.States.PAUSED) {
                 this.roundResume();
-            } else if (this.roundState != LevelRoundState.States.PAUSED_TRANSITION) {
+            } else if (this.roundState !== LevelRoundState.States.PAUSED_TRANSITION) {
                 this.roundPause();
             }
         },
@@ -200,7 +200,7 @@ define(['phaser',
                 this.playSoundIntro('BOUNCEIN');
                 break;
             default:
-                throw "FailStateTransition " + this.transitionData.animation;
+                throw 'FailStateTransition' + this.transitionData.animation;
             }
         },
         
@@ -238,7 +238,7 @@ define(['phaser',
             var tween = this.game.add.tween(this.renderLayer)
                 .to({y: this.background.height}, 1000, Phaser.Easing.Linear.None, true);
 
-            tween.onComplete.add(this.nextRound.bind(this, LevelMasterState.Transition.SLIDE_DOWN));            
+            tween.onComplete.add(this.nextRound.bind(this, LevelMasterState.Transition.SLIDE_DOWN));
         },
 
         tweenOutroSlideLeft: function() {

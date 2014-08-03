@@ -107,7 +107,7 @@ define(['phaser'], function(Phaser) {
             if (this.soundInitial) {
                 this.soundInitial = false;
                 this.fx.play(this.currentSound);
-            } else if (this.loopSound != '') {
+            } else if (this.loopSound !== '') {
                 this.soundTimer -= this.game.time.elapsed;
 
                 if (this.soundTimer <= 0) {
