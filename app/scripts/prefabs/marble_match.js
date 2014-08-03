@@ -100,6 +100,12 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
         this.game.time.events.add(2000, function() {
             this.onMatchEnd.dispatch(winner);
         }, this);
+
+        if (winner === MarbleMatch.Player.ONE) {
+            this.playSoundVictory();
+        } else {
+            this.playSoundLoss();
+        }
     };
     
     MarbleMatch.prototype.marbleMatched = function(player, color, count, streak) {
@@ -190,6 +196,14 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
 
         this.loseS.x = loseX + cX;
         this.loseS.y = Y + cY;
+    };
+
+    MarbleMatch.prototype.playSoundVictory = function() {
+        this.fx.play('VICTORY');
+    };
+
+    MarbleMatch.prototype.playSoundLoss = function() {
+        this.fx.play('LOSS');
     };
     
     return MarbleMatch;

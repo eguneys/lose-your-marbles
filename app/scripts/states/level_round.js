@@ -3,6 +3,13 @@
 define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai', 'util'], function(Phaser, LevelMasterState, RoundForeground, MarbleGroup, MarbleMatch, BotAI, Util) {
     function LevelRoundState() {}
 
+    LevelRoundState.States = {
+        INTRO: 'intro',
+        PLAYING: 'playing',
+        ROUND_END: 'round_end',
+        OUTRO: 'outro'
+    };
+    
     LevelRoundState.prototype = {
         init: function(levelData, transitionData) {
             this.levelData = levelData;
@@ -11,6 +18,8 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
         
         create: function() {
             this.fx = Util.parseAudioSprite(this.game);
+
+            this.roundState = LevelRoundState.States.INTRO;
             
             var level = this.levelData.level;
             
@@ -25,7 +34,10 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
             this.match.y = 20;
             this.match.alpha = 0;
             
-            this.match.onMatchEnd.add(this.roundEnd, this);
+            this.match.onMatchEnd.add(function(winner) {
+                this.roundState = LevelRoundState.States.ROUND_END;
+                this.roundWinner = winner;
+            }, this);
             
             this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
             this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -40,8 +52,10 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
         },
 
         update: function() {
-            this.botAI.update(this.match.queryGameState(MarbleMatch.Player.TWO));
-            this.botAI2.update(this.match.queryGameState(MarbleMatch.Player.ONE));
+            if (this.roundState === LevelRoundState.States.PLAYING) {
+                this.botAI.update(this.match.queryGameState(MarbleMatch.Player.TWO));
+                this.botAI2.update(this.match.queryGameState(MarbleMatch.Player.ONE));
+            }
         },
         
         roundStart: function() {
@@ -61,14 +75,16 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
         matchStart: function() {
             this.foreground.alpha = 0;
             this.match.alpha = 1;
+
+            this.roundState = LevelRoundState.States.PLAYING;
             
             this.match.matchStart();
             
-            this.upKey.onDown.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.UP));
-            this.downKey.onDown.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.DOWN));
-            this.leftKey.onDown.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.LEFT));
-            this.rightKey.onDown.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.RIGHT));
-            this.shiftKey.onDown.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.SHIFT));
+            this.upKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.UP));
+            this.downKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.DOWN));
+            this.leftKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.LEFT));
+            this.rightKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.RIGHT));
+            this.shiftKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.SHIFT));
 
             
             // this.botAI2.upPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.UP));
@@ -77,11 +93,20 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
             // this.botAI2.rightPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.RIGHT));
             // this.botAI2.shiftPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.SHIFT));
             
-            this.botAI.upPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.UP));
-            this.botAI.downPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.DOWN));
-            this.botAI.leftPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.LEFT));
-            this.botAI.rightPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.RIGHT));
-            this.botAI.shiftPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.TWO, MarbleGroup.Input.SHIFT));
+            this.botAI.upPress.add(this.handleInput.bind(this, MarbleMatch.Player.TWO, MarbleGroup.Input.UP));
+            this.botAI.downPress.add(this.handleInput.bind(this, MarbleMatch.Player.TWO, MarbleGroup.Input.DOWN));
+            this.botAI.leftPress.add(this.handleInput.bind(this, MarbleMatch.Player.TWO, MarbleGroup.Input.LEFT));
+            this.botAI.rightPress.add(this.handleInput.bind(this, MarbleMatch.Player.TWO, MarbleGroup.Input.RIGHT));
+            this.botAI.shiftPress.add(this.handleInput.bind(this, MarbleMatch.Player.TWO, MarbleGroup.Input.SHIFT));
+        },
+
+        handleInput: function(sender, direction) {
+            if (this.roundState === LevelRoundState.States.ROUND_END) {
+                this.roundState = LevelRoundState.States.OUTRO;
+                this.roundEnd(this.roundWinner);
+            } else {
+                this.match.handleInput(sender, direction);
+            }
         },
         
         nextRound: function(outroAnimation) {
@@ -99,10 +124,12 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
             case LevelMasterState.Transition.SLIDE_LEFT:
                 this.renderLayer.x = - this.background.width;
                 this.tweenIntroSlideLeft();
+                this.playSoundIntro('BOUNCEIN');
                 break;
             case LevelMasterState.Transition.SLIDE_DOWN:
                 this.renderLayer.y = - this.background.height;
                 this.tweenIntroSlideDown();
+                this.playSoundIntro('BOUNCEIN');
                 break;
             default:
                 throw "FailStateTransition " + this.transitionData.animation;
@@ -115,6 +142,9 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
                 this.tweenOutroSlideLeft
             ]);
 
+            // TODO sync with outro tween.
+            this.playSoundOutro('BOUNCOUT');
+            
             return tweenFunction.call(this);
         },
 
@@ -148,6 +178,14 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
                 .to({x: this.background.width}, 1000, Phaser.Easing.Linear.None, true);
 
             tween.onComplete.add(this.nextRound.bind(this, LevelMasterState.Transition.SLIDE_LEFT));
+        },
+
+        playSoundOutro: function(outro) {
+            this.fx.play(outro);
+        },
+
+        playSoundIntro: function(intro) {
+            this.fx.play(intro);
         }
     };
 
