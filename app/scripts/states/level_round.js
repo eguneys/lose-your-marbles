@@ -20,7 +20,7 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
 
             this.foreground = new RoundForeground(this.game, this.levelData.round, this.renderLayer, this.fx);
 
-            this.match = new MarbleMatch(this.game, this.levelData, this.renderLayer);
+            this.match = new MarbleMatch(this.game, this.levelData, this.renderLayer, this.fx);
             this.match.x = 53;
             this.match.y = 20;
             this.match.alpha = 0;

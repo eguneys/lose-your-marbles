@@ -1,9 +1,11 @@
 'use strict';
 
 define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
-    function MarbleGroup(game, parent) {
+    function MarbleGroup(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
 
+        this.fx = fx;
+        
         this.rows = 15;
         this.columns = 5;
         this.center = (this.rows - 1) / 2;
@@ -136,9 +138,12 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
                 this.onMarbleFull.dispatch(dropColumn);
                 return;
             }
-            
+
             this.fillMarblesInColumn(dropColumn, color);
         }
+
+        // TODO find how to play dump sound
+        this.playSoundDump(3);
     };
 
     MarbleGroup.prototype.dropMarbles = function(count, color) {
@@ -307,6 +312,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         var column = this.marbles[this.cursorIdx];
         
         if (!this.canLiftUp(this.cursorIdx)) {
+            this.playSoundCantMove();
             return 0;
         }
 
@@ -322,6 +328,8 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
 
         this.marbleEdges[this.cursorIdx].top++;
         this.marbleEdges[this.cursorIdx].bottom--;
+
+        this.playSoundUp();
         
         return tween;
     };
@@ -330,6 +338,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         var column = this.marbles[this.cursorIdx];
         
         if (!this.canLiftDown(this.cursorIdx)) {
+            this.playSoundCantMove();
             return 0;
         }
 
@@ -342,6 +351,8 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
                 tween = column[i + 1].down(i + 1);
             }
         }
+
+        this.playSoundDown();
 
         this.marbleEdges[this.cursorIdx].top--;
         this.marbleEdges[this.cursorIdx].bottom++;
@@ -363,10 +374,13 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         for (i = 1; i < this.columns; i++) {
             this.getMarble(this.center, i).shift(i);
         }
+
+        this.playSoundRoll();
+        
         return rightMost.shiftRightMost(this.columns);
     };
 
-    MarbleGroup.prototype.killMarbleMatches = function(allKilledCallback, callbackContext) {
+    MarbleGroup.prototype.killMarbleMatches = function(allKilledCallback, callbackContext, streak) {
         var matchStart = 0;
         var matchCount = 0;
         var matchColor;
@@ -388,7 +402,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
         if (matchCount >= MarbleGroup.MATCH_MIN) {
             var tweenMarbleDropThenCallback = function() {
                 var tween = this.removeKilledMarblesAndDropColumn();
-                tween.onComplete.add(allKilledCallback, callbackContext);
+                tween.onComplete.add(allKilledCallback.bind(callbackContext, streak));
             };
             
             for (var i = 0; i < matchCount; i++) {
@@ -401,11 +415,23 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
                 }
 
                 // delay kill based on row index for the effect
-                this.game.time.events.add(i * MarbleGroup.MARBLE_KILL_DELAY, marble.playKill, marble);
+                this.game.time.events.add(i * MarbleGroup.MARBLE_KILL_DELAY, this.killMarble.bind(this, marble, matchCount, streak));
+            }
+
+            if (streak > 1) {
+                this.playSoundStreak(streak);
             }
         }
         
         return { count: matchCount, color: matchColor };
+    };
+
+    MarbleGroup.prototype.killMarble = function(marble, count, streak) {
+        marble.playKill();
+
+        if (streak === 1) {
+            this.playSoundLineUp(count);
+        }
     };
 
     MarbleGroup.prototype.removeKilledMarblesAndDropColumn = function() {
@@ -489,7 +515,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
     };
 
     MarbleGroup.prototype.dropMarblesEventChainStart = function(streak) {
-        var match = this.killMarbleMatches(this.dropMarblesEventChainStart.bind(this, streak + 1));
+        var match = this.killMarbleMatches(this.dropMarblesEventChainStart, this, streak + 1);
 
         var matchCount = match.count;
         var matchColor = match.color;
@@ -506,6 +532,40 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
             .to({ x: this.cursorIdx * Marble.WIDTH }, MarbleGroup.CURSOR_MOVE_DURATION, Phaser.Easing.Linear.None, true);
     };
 
+    
+    MarbleGroup.prototype.playSoundUp = function() {
+        var sound = this.game.rnd.pick(['MOVE1', 'MOVE3']);
+        this.fx.play(sound);
+    };
+    
+    MarbleGroup.prototype.playSoundDown = function() {
+        this.playSoundUp();
+    };
+
+    MarbleGroup.prototype.playSoundRoll = function() {
+        this.fx.play('MOVE2');
+    };
+
+    MarbleGroup.prototype.playSoundCantMove = function() {
+        this.fx.play('cantmove');
+    };
+
+    MarbleGroup.prototype.playSoundLineUp = function(count) {
+        this.fx.play('LNUP' + count + 'FST');
+    };
+
+    MarbleGroup.prototype.playSoundStreak = function(streak) {
+        var sound = Math.min(Math.pow(2, (streak - 1)), 32);
+        this.fx.play(sound);
+        if (streak >= 6) {
+            this.fx.play('OVER6');
+        }
+    };
+
+    MarbleGroup.prototype.playSoundDump = function(count) {
+        this.fx.play('DUMP' + count);
+    };
+    
     MarbleGroup.prototype.thereIsMarble = function(row, col) {
         return !!this.marbles[col][row];
     };
