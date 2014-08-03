@@ -48,13 +48,13 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marble'
 
         var hudDiff = p2Info.pos.x - (p1Info.pos.x + p1.width) - 50;
         
-        var p1Hud = new MarbleHud(this.game, this, p1Info.matchColor, this.levelData.level, p1Info.score, p1.height, hudDiff);
+        var p1Hud = new MarbleHud(this.game, this, this.fx, p1Info.matchColor, this.levelData.level, p1Info.score, p1.height, hudDiff);
         p1Hud.x = p1.width;
         p1Hud.onMarblePop.add(this.marblePop.bind(this, MarbleMatch.Player.ONE));
 
         this.hud[MarbleMatch.Player.ONE] = p1Hud;
 
-        var p2Hud = new MarbleHud(this.game, this, p2Info.matchColor, this.levelData.level, p2Info.score, p2.height, -hudDiff);
+        var p2Hud = new MarbleHud(this.game, this, this.fx, p2Info.matchColor, this.levelData.level, p2Info.score, p2.height, -hudDiff);
         p2Hud.x = p2Info.pos.x - Marble.WIDTH * 2;
         p2Hud.onMarblePop.add(this.marblePop.bind(this, MarbleMatch.Player.TWO));
         this.hud[MarbleMatch.Player.TWO] = p2Hud;

@@ -1,9 +1,11 @@
 'use strict';
 
 define(['phaser', 'prefabs/red_number'], function(Phaser, RedNumber) {
-    function PopNumber(game, parent) {
+    function PopNumber(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
 
+        this.fx = fx;
+        
         this.frameRate = 7 * 5;
         
         this.number = new RedNumber(this.game, this);
@@ -21,6 +23,10 @@ define(['phaser', 'prefabs/red_number'], function(Phaser, RedNumber) {
         this.popFx.x = this.number.x + this.number.width / 2;
         this.popFx.y = this.number.y + this.number.height / 2;
         this.popFx.animations.play('pop');
+    };
+
+    PopNumber.prototype.playSoundPop = function() {
+        this.fx.play('POOF');
     };
 
     return PopNumber;

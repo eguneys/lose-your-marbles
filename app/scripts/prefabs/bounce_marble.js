@@ -2,8 +2,10 @@
 
 define(['phaser'], function(Phaser) {
     // http://jsbin.com/rokelulo/21/edit?js,output
-    function BounceMarble(game, parent) {
+    function BounceMarble(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
+
+        this.fx = fx;
 
         // TODO change shade for level
         this.shadow = this.create(0, 0, 'marbleatlas', 'LEVEL-01_BALL_SHADOW');
@@ -38,12 +40,21 @@ define(['phaser'], function(Phaser) {
 
         marble.x = follow.x;
         marble.y = follow.y;
-
+        
         marble.x += physics.zX;
         marble.y += physics.zY;
         
         this.shadow.x = follow.x;
         this.shadow.y = follow.y;
+
+        // TODO Too much sound caused by Physics bug
+        if (physics.z === 0 && marble.y > -220) {
+            this.playSoundBounce();
+        };
+    };
+
+    BounceMarble.prototype.playSoundBounce = function() {
+        this.fx.play('BOUNCE');
     };
 
 

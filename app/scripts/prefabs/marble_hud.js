@@ -1,15 +1,17 @@
 'use strict';
 
 define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number', 'prefabs/pop_number', 'prefabs/bounce_marble', 'prefabs/round_score'], function(Phaser, Marble, BlueNumber, RedNumber, PopNumber, BounceMarble, RoundScore) {
-    function MarbleHud(game, parent, color, level, score, height, toPosX) {
+    function MarbleHud(game, parent, fx, color, level, score, height, toPosX) {
         Phaser.Group.call(this, game, parent);
 
+        this.fx = fx;
+        
         this.scPos = { x: 0, y: height * 7 / 15 };
         this.scToPos = { x: toPosX, y: 0 };
 
         var popPos = { x: this.scToPos.x, y: this.scToPos.y - height * 9 / 15 };
         
-        this.marbleCounter = new MarbleCounter(this.game, this, color, popPos);
+        this.marbleCounter = new MarbleCounter(this.game, this, this.fx, color, popPos);
         this.marbleCounter.y = height * 9/15;
         
         this.score = new RoundScore(this.game, 0, 0, level, score);
@@ -58,15 +60,19 @@ define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number',
         this.marbleCounter.counterDump(color);
     };
     
-    function MarbleCounter(game, parent, color, popPos) {
+    function MarbleCounter(game, parent, fx, color, popPos) {
         Phaser.Group.call(this, game, parent);
 
+        this.fx = fx;
+
         this.counter = 1;
+
+        this.dumpCount = 0;
 
         this.popPos = popPos;
 
         
-        this.bounceMarble = new BounceMarble(this.game, this);
+        this.bounceMarble = new BounceMarble(this.game, this, this.fx);
         this.marble = this.buildMarble(color);
         this.times = this.create(0, this.marble.height, 'marbleatlas', 'COMMON01_TEXT_TIMES');
         this.number = new BlueNumber(this.game, this);
@@ -75,7 +81,7 @@ define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number',
         this.number.show(this.counter);
 
 
-        this.popNumber = new PopNumber(this.game, this);
+        this.popNumber = new PopNumber(this.game, this, this.fx);
         this.popNumber.x = popPos.x;
         this.popNumber.y = popPos.y;
         this.popNumber.alpha = 0;
@@ -107,10 +113,8 @@ define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number',
     };
 
     MarbleCounter.prototype.counterDump = function(color) {
-        this.counter++;
-        
         var tween = this.bounceMarble.tweenBounce(this.marble, this.popPos.x + (this.marble.width / 2), this.popPos.y + (this.marble.height / 2));
-        tween.onComplete.add(this.marblePop.bind(this, this.marble, this.counter));
+        tween.onComplete.add(this.marblePop.bind(this, this.marble, this.counter + 1));
         
         this.marble.animations.play('upfull');
         
@@ -129,11 +133,19 @@ define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number',
         marble.kill();
 
         this.popNumber.alpha = 1;
-        this.popCountdown(counter);
+        if (this.dumpCount === 0) {
+            this.dumpCount = counter;
+            this.popCountdown();
+        } else {
+            this.dumpCount += counter;
+        }
     };
 
-    MarbleCounter.prototype.popCountdown = function(count) {
+    MarbleCounter.prototype.popCountdown = function() {
+        var count = this.dumpCount--;
+        
         if (count <= 0) {
+            this.dumpCount = 0;
             this.popNumber.alpha = 0;
             return;
         }
@@ -142,8 +154,9 @@ define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number',
         this.parent.onMarblePop.dispatch(count);
         
         this.popNumber.pop(count);
+        this.popNumber.playSoundPop();
         
-        this.game.time.events.add(1000, this.popCountdown.bind(this, count - 1));
+        this.game.time.events.add(1000, this.popCountdown, this);
     };
     
     return MarbleHud;
