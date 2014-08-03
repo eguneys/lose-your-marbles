@@ -2,13 +2,14 @@
 
 define(['phaser', 'prefabs/toggle_sprite'], function(Phaser, ToggleSprite) {
     
-    function Menu(game, menuIdx) {
-        Phaser.Group.call(this, game);
+    function Menu(game, parent, menuIdx, background) {
+        background = background || 'DIALOG_MENU_BG';
+        Phaser.Group.call(this, game, parent);
 
         this.menuItems = [];
         this.menuIdx = menuIdx;
         
-        this.menuBg = this.create(0, 0, 'marbleatlas', 'DIALOG_MENU_BG');
+        this.menuBg = this.create(0, 0, 'marbleatlas', background);
 
         var menuWidth = this.menuBg.width;
         var menuHeight = this.menuBg.height;

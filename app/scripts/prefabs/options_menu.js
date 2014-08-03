@@ -1,8 +1,8 @@
 'use strict';
 
 define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefabs/select_sprite'], function(Phaser, BaseMenu, VolumeSprite, SelectSprite) {
-    function OptionsMenu(game) {
-        BaseMenu.call(this, game, OptionsMenu.Items.MUSIC);
+    function OptionsMenu(game, parent) {
+        BaseMenu.call(this, game, parent, OptionsMenu.Items.MUSIC);
 
         var centerX = this.menuBg.width / 2;
         var centerY = this.menuBg.height / 2;

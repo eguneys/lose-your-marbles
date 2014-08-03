@@ -1,13 +1,23 @@
 'use strict';
 
-define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai', 'util'], function(Phaser, LevelMasterState, RoundForeground, MarbleGroup, MarbleMatch, BotAI, Util) {
+define(['phaser',
+        'states/level_master',
+        'prefabs/round_foreground',
+        'prefabs/pause_menu',
+        'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai', 'util'], function(Phaser,
+                                                                                        LevelMasterState,
+                                                                                        RoundForeground,
+                                                                                        PauseMenu,
+                                                                                        MarbleGroup, MarbleMatch, BotAI, Util) {
     function LevelRoundState() {}
 
     LevelRoundState.States = {
         INTRO: 'intro',
         PLAYING: 'playing',
         ROUND_END: 'round_end',
-        OUTRO: 'outro'
+        OUTRO: 'outro',
+        PAUSED_TRANSITION: 'pause_transition',
+        PAUSED: 'pause'
     };
     
     LevelRoundState.prototype = {
@@ -38,12 +48,15 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
                 this.roundState = LevelRoundState.States.ROUND_END;
                 this.roundWinner = winner;
             }, this);
+
+            this.pauseMenu = new PauseMenu(this.game, this.renderLayer, level, this.fx);
             
             this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
             this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
             this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
             this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
             this.shiftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+            this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
             
             this.botAI = new BotAI();
             this.botAI2 = new BotAI();
@@ -68,6 +81,20 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
             this.tweenOutro();
         },
 
+        roundPause: function() {
+            this.roundStateResume = this.roundState;
+            this.roundState = LevelRoundState.States.PAUSED_TRANSITION;
+
+            this.tweenPauseMenuShow();
+            this.playSoundZoomIn();
+        },
+
+        roundResume: function() {
+            this.roundState = LevelRoundState.States.PAUSED_TRANSITION;
+            this.tweenPauseMenuHide();
+            this.playSoundZoomIn();
+        },
+
         matchCountdown: function() {
             this.foreground.startCountdown(this.matchStart ,this);
         },
@@ -85,7 +112,8 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
             this.leftKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.LEFT));
             this.rightKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.RIGHT));
             this.shiftKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.SHIFT));
-
+            
+            this.escKey.onDown.add(this.handlePause, this);
             
             // this.botAI2.upPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.UP));
             // this.botAI2.downPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.DOWN));
@@ -104,8 +132,20 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
             if (this.roundState === LevelRoundState.States.ROUND_END) {
                 this.roundState = LevelRoundState.States.OUTRO;
                 this.roundEnd(this.roundWinner);
-            } else {
+            } else if (this.roundState === LevelRoundState.States.PLAYING) {
                 this.match.handleInput(sender, direction);
+            } else if (this.roundState == LevelRoundState.States.PAUSED) {
+                this.pauseMenu.handleInput(direction);
+                this.pauseMenu.playSoundNavigate();
+            }
+        },
+
+
+        handlePause: function() {
+            if (this.roundState === LevelRoundState.States.PAUSED) {
+                this.roundResume();
+            } else if (this.roundState != LevelRoundState.States.PAUSED_TRANSITION) {
+                this.roundPause();
             }
         },
         
@@ -180,12 +220,38 @@ define(['phaser', 'states/level_master', 'prefabs/round_foreground', 'prefabs/ma
             tween.onComplete.add(this.nextRound.bind(this, LevelMasterState.Transition.SLIDE_LEFT));
         },
 
+        tweenPauseMenuShow: function() {
+            var tween = this.game.add.tween(this.pauseMenu.scale)
+                    .to({x:1, y:1}, 200);
+
+            tween.onComplete.add(function() {
+                this.roundState = LevelRoundState.States.PAUSED;
+            }, this);
+
+            tween.start();
+        },
+
+        tweenPauseMenuHide: function() {
+            var tween = this.game.add.tween(this.pauseMenu.scale)
+                    .to({x:0, y:0}, 200);
+
+            tween.onComplete.add(function() {
+                this.roundState = this.roundStateResume;
+            }, this);
+
+            tween.start();
+        },
+
         playSoundOutro: function(outro) {
             this.fx.play(outro);
         },
 
         playSoundIntro: function(intro) {
             this.fx.play(intro);
+        },
+
+        playSoundZoomIn: function() {
+            this.fx.play('ZOOMIN');
         }
     };
 
