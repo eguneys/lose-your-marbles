@@ -2,6 +2,13 @@
 
 define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_menu', 'prefabs/fade_tween', 'util'], function(Phaser, BaseMenu, MainMenu, OptionsMenu, FadeTween, Util) {
     function MainMenuState() {}
+
+    MainMenuState.States = {
+        INTRO: 'intro',
+        MAIN: 'main',
+        OPTIONS: 'options',
+        TRANSITION: 'transition'
+    };
     
     MainMenuState.prototype = {
         create: function() {
@@ -16,9 +23,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
 
             this.optionsMenu = null;
 
-            // 'main' or 'options'
-            // or 'transition' which doesn't allow selection
-            this.menuFocus = 'main';
+            this.menuState = MainMenuState.States.INTRO;
             
             this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
             this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -42,14 +47,16 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
 
             this.spacebarKey.onDown.add(this.keyEnter, this);
             this.enterKey.onDown.add(this.keyEnter, this);
+
+            this.menuState = MainMenuState.States.MAIN;
         },
 
         keyPress: function(key) {
-            if (this.menuFocus === 'main') {
+            if (this.menuState === MainMenuState.States.MAIN) {
                 if (this.menu.select(key) !== -1) {
                     this.menu.playSelectSound();
                 }
-            } else if (this.menuFocus === 'options') {
+            } else if (this.menuState === MainMenuState.States.OPTIONS) {
                 if (this.optionsMenu.select(key) !== -1) {
                     this.menu.stopSound();
                 }
@@ -57,10 +64,10 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
         },
 
         keyEnter: function() {
-            if (this.menuFocus === 'main') {
+            if (this.menuState === MainMenuState.States.MAIN) {
                 this.mainMenuSelect();
-                this.menu.doSelect();
-            } else if (this.menuFocus === 'options') {
+                this.menu.stopSound();
+            } else if (this.menuState === MainMenuState.States.OPTIONS) {
                 this.optionsMenuSelect();
             }
         },
@@ -84,6 +91,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
         optionsMenuSelect: function() {
             switch(this.optionsMenu.getSelection()) {
             case OptionsMenu.Items.EXIT:
+                this.menuState = MainMenuState.States.TRANSITION;
                 this.tweenMainMenu();
                 break;
             case OptionsMenu.Items.CREDITS:
@@ -92,8 +100,6 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
         },
 
         selectPlay: function() {
-            if (!this.menu.allowSelect) return;
-            
             this.tweenPlayState();
             this.fx.play('ZOOMIN');
         },
@@ -102,8 +108,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
             this.optionsMenu = this.optionsMenu ||
                 new OptionsMenu(this.game);
 
-            this.menuFocus = 'transition';
-            
+            this.menuState = MainMenuState.States.TRANSITION;
             this.tweenOptionsMenu();
         },
 
@@ -138,14 +143,14 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
         },
 
         tweenOptionsMenu: function() {
-            this.tweenTransitionMenu(this.menu, this.optionsMenu, 'options');
+            this.tweenTransitionMenu(this.menu, this.optionsMenu, MainMenuState.States.OPTIONS);
         },
 
         tweenMainMenu: function() {
-            this.tweenTransitionMenu(this.optionsMenu, this.menu, 'main');
+            this.tweenTransitionMenu(this.optionsMenu, this.menu, MainMenuState.States.MAIN);
         },
 
-        tweenTransitionMenu: function(shrinkMenu, growMenu, onCompleteFocus) {
+        tweenTransitionMenu: function(shrinkMenu, growMenu, onCompleteState) {
             var tweenMenuShrink = this.game.add.tween(shrinkMenu.scale)
                     .to({ x: 0, y: 0}, 300);
 
@@ -157,7 +162,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
             }, this);
 
             tweenMenuGrow.onComplete.add(function() {
-                this.menuFocus = onCompleteFocus;
+                this.menuState = onCompleteState;
             }, this);
 
             tweenMenuShrink.chain(tweenMenuGrow);
