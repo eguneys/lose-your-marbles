@@ -4,11 +4,14 @@ define(['phaser',
         'states/level_master',
         'prefabs/round_foreground',
         'prefabs/pause_menu',
-        'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai', 'util'], function(Phaser,
-                                                                                        LevelMasterState,
-                                                                                        RoundForeground,
-                                                                                        PauseMenu,
-                                                                                        MarbleGroup, MarbleMatch, BotAI, Util) {
+        'prefabs/fade_tween',
+        'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai', 'util'],
+       function(Phaser,
+                LevelMasterState,
+                RoundForeground,
+                PauseMenu,
+                FadeTween,
+                MarbleGroup, MarbleMatch, BotAI, Util) {
     function LevelRoundState() {}
 
     LevelRoundState.States = {
@@ -17,7 +20,8 @@ define(['phaser',
         ROUND_END: 'round_end',
         OUTRO: 'outro',
         PAUSED_TRANSITION: 'pause_transition',
-        PAUSED: 'pause'
+        PAUSED: 'pause',
+        EXIT_TRANSITION: 'exit_transition'
     };
     
     LevelRoundState.prototype = {
@@ -50,12 +54,17 @@ define(['phaser',
             }, this);
 
             this.pauseMenu = new PauseMenu(this.game, this.renderLayer, level, this.fx);
+
+            this.fadeBg = new FadeTween(this.game, 0xffffff, 0);
+            this.renderLayer.add(this.fadeBg);
             
             this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
             this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
             this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
             this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
             this.shiftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+            
+            this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
             this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
             
             this.botAI = new BotAI();
@@ -95,6 +104,11 @@ define(['phaser',
             this.playSoundZoomIn();
         },
 
+        roundExit: function() {
+            this.roundState = LevelRoundState.States.EXIT_TRANSITION;
+            this.tweenRoundExit();
+        },
+
         matchCountdown: function() {
             this.foreground.startCountdown(this.matchStart ,this);
         },
@@ -112,7 +126,8 @@ define(['phaser',
             this.leftKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.LEFT));
             this.rightKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.RIGHT));
             this.shiftKey.onDown.add(this.handleInput.bind(this, MarbleMatch.Player.ONE, MarbleGroup.Input.SHIFT));
-            
+
+            this.enterKey.onDown.add(this.handleEnter, this);
             this.escKey.onDown.add(this.handlePause, this);
             
             // this.botAI2.upPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.UP));
@@ -135,11 +150,24 @@ define(['phaser',
             } else if (this.roundState === LevelRoundState.States.PLAYING) {
                 this.match.handleInput(sender, direction);
             } else if (this.roundState == LevelRoundState.States.PAUSED) {
+                if (direction === MarbleGroup.Input.SHIFT) {
+                    this.handleEnter();
+                    return;
+                }
                 this.pauseMenu.handleInput(direction);
                 this.pauseMenu.playSoundNavigate();
             }
         },
 
+        handleEnter: function() {
+            if (this.roundState === LevelRoundState.States.PAUSED) {
+                if (this.pauseMenu.getSelection() === PauseMenu.Items.YES) {
+                    this.roundExit();
+                } else {
+                    this.roundResume();
+                }
+            }
+        },
 
         handlePause: function() {
             if (this.roundState === LevelRoundState.States.PAUSED) {
@@ -240,6 +268,15 @@ define(['phaser',
             }, this);
 
             tween.start();
+        },
+
+        tweenRoundExit: function() {
+            // TODO this fade doesn't work WTF!!
+            var tween = this.fadeBg.tweenFadeOn();
+
+            tween.onComplete.add(function() {
+                this.game.state.start('main-menu');
+            }, this);
         },
 
         playSoundOutro: function(outro) {
