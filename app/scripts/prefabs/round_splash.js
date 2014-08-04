@@ -12,7 +12,7 @@ define(['phaser', 'prefabs/blue_number'], function(Phaser, BlueNumber) {
         this.roundNumber.y = this.roundText.height + this.roundNumber.height / 2;
 
         this.roundNumber.show(round);
-
+        
         this.width = this.roundText.width;
         this.height = this.roundText.height + this.roundNumber.height;
     }

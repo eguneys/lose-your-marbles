@@ -9,6 +9,7 @@ define(['prefabs/fade_tween'], function(FadeTween) {
                 levelData = {
                     level: 0,
                     round: 1,
+                    isBonus: false,
                     players: [
                         {
                             score: 0,
@@ -45,11 +46,27 @@ define(['prefabs/fade_tween'], function(FadeTween) {
         },
 
         decideLevelState: function() {
-            if (this.isFirstLevel() || this.getWinningPlayer() !== -1) {
-                this.nextLevel();
+            if (this.isFirstLevel()) {
+                // TODO debug
+                this.bonusLevel();
+                //this.nextLevel();
+            } else if (this.getWinningPlayer() !== -1) {
+                if (!this.isBonusLevel() && this.getLevel() <= 3) {
+                    this.bonusLevel();
+                } else {
+                    this.nextLevel();
+                }
             } else {
                 this.nextRound();
             }
+        },
+
+        bonusLevel: function() {
+            this.levelData.isBonus = true;
+
+            this.levelData.round = 0;
+            
+            this.game.state.start('level-bonus-round', true, false, this.levelData, this.transitionData);
         },
 
         nextLevel: function() {
@@ -70,8 +87,16 @@ define(['prefabs/fade_tween'], function(FadeTween) {
             this.game.state.start('level-round', true, false, this.levelData, this.transitionData);
         },
 
+        isBonusLevel: function() {
+            return this.levelData.isBonus;
+        },
+        
         isFirstLevel: function() {
-            return this.levelData.level === 0;
+            return this.getLevel() === 0;
+        },
+
+        getLevel: function() {
+            return this.levelData.level;
         },
 
         getWinningPlayer: function() {

@@ -7,14 +7,16 @@ define(['phaser', 'config',
         'states/main_menu',
         'states/level_master',
         'states/level_intro',
-        'states/level_round'], function(Phaser, config,
-                                        BootState,
-                                        PreloadState,
-                                        MainIntroState,
-                                        MainMenuState,
-                                        LevelMasterState,
-                                        LevelIntroState,
-                                        LevelRoundState) {
+        'states/level_round',
+        'states/level_bonus_round'], function(Phaser, config,
+                                             BootState,
+                                             PreloadState,
+                                             MainIntroState,
+                                             MainMenuState,
+                                             LevelMasterState,
+                                             LevelIntroState,
+                                             LevelRoundState,
+                                             LevelBonusRoundState) {
     function Game(options) {
         config.options = options || config.options;
     }
@@ -31,7 +33,8 @@ define(['phaser', 'config',
             game.state.add('level-master', LevelMasterState);
             game.state.add('level-intro', LevelIntroState);
             game.state.add('level-round', LevelRoundState);
-    
+            game.state.add('level-bonus-round', LevelBonusRoundState);
+            
             game.state.start('boot');
 
             this.game = game;

@@ -20,8 +20,8 @@ define(['phaser', 'config'], function(Phaser, config) {
         },
 
         create: function() {
-            //this.game.state.start('level-master');
-            this.game.state.start('main-intro');
+            this.game.state.start('level-master');
+            //this.game.state.start('main-intro');
         }
     };
 

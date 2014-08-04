@@ -953,10 +953,20 @@
 		"spriteSourceSize": {"x":0,"y":1,"w":190,"h":137},
 		"sourceSize": {"w":190,"h":137}
     },
+    "COMMON03_TEXT_MARBLES": {
+		"frame": {"x":640, "y":944, "w":158, "h":36},
+		"spriteSourceSize": {"x":0,"y":0,"w":158,"h":36},
+		"sourceSize": {"w":158,"h":36}
+    },
     "COMMON03_TEXT_MARBLES_TIMER": {
-		"frame": {"x":640, "y":944, "w":275, "h":36},
-		"spriteSourceSize": {"x":0,"y":0,"w":275,"h":36},
-		"sourceSize": {"w":275,"h":36}
+		"frame": {"x":798, "y":944, "w":105, "h":36},
+		"spriteSourceSize": {"x":0,"y":0,"w":117,"h":36},
+		"sourceSize": {"w":117,"h":36}
+    },
+    "COMMON03_TEXT_MARBLES_TIMER_SEPERATE": {
+		"frame": {"x":903, "y":944, "w":12, "h":36},
+		"spriteSourceSize": {"x":0,"y":0,"w":117,"h":36},
+		"sourceSize": {"w":117,"h":36}
     },
     "COMMON03_DIGIT_0": {
 		"frame": {"x":640, "y":980, "w":32, "h":34},
