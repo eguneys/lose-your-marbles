@@ -18,6 +18,10 @@ define(['phaser', 'states/level_master', 'states/level_base_round', 'prefabs/mar
         this.bonusMatch.y = 20;
         this.bonusMatch.alpha = 0;
 
+        this.bonusMatch.onMatchEnd.add(function() {
+            this.roundState = LevelBaseRoundState.States.ROUND_END;
+        }, this);
+
         this.roundStart();
     };
     

@@ -11,7 +11,7 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles
         this.status = MarbleBonusMatch.State.INITIAL;
 
         this.timeLeft = 90;
-        this.marblesCounter = 0;
+        this.marblesCount = 0;
         
         var p1Info = {
             pos: { x: 0, y: 0 },
@@ -31,7 +31,7 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles
         this.marbles = p1;
 
         // TODO what's this
-        var hudDiff = 100;
+        var hudDiff = 150;
 
         var p1Hud = new MarbleHud(this.game, this, this.fx, p1Info.matchColor, this.levelData.level, p1Info.score, p1.height, hudDiff);
         p1Hud.x = p1.width;
@@ -98,36 +98,42 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles
         }
 
         // drop when?
-        if (false && streak > 0) {
+        if (streak > 0) {
             var points = Math.pow(2, streak);
             var tween = this.hud.streakShow(points);
             tween.onComplete.add(function() {
-                this.marbles.dropMarblesNoAnim(points);
+                //this.marbles.dropMarblesNoAnim(points);
+                this.addMarbles(points);
             }, this);
         }
 
         // TODO do stuff
-        // if (count === 3) {
-        //     if (color === this.matchInfo[player].matchColor) {
-        //         this.marbles[opponent].dropMarbles(3);
-        //     } else {
-        //         this.marbles[opponent].dropMarbles(1);
-        //     }
-        // } else if (count === 4) {
-        //     if (color === this.matchInfo[player].matchColor) {
-        //         this.marbles[opponent].dropMarbles(4);
-        //     } else {
-        //         this.marbles[opponent].dropMarbles(2);
-        //     }
-        // } else {
-        //     this.hud[player].counterDump(color);
-        //     this.matchInfo[player].matchColor = color;
-        // }
+        if (count === 3) {
+            if (color === this.matchInfo.matchColor) {
+                //this.marbles.dropMarbles(3);
+                this.addMarbles(3);
+            } else {
+                //this.marbles.dropMarbles(1);
+                this.addMarbles(1);
+            }
+        } else if (count === 4) {
+            if (color === this.matchInfo.matchColor) {
+                //this.marbles.dropMarbles(4);
+                this.addMarbles(4);
+            } else {
+                //this.marbles.dropMarbles(2);
+                this.addMarbles(2);
+            }
+        } else {
+            this.hud.counterDump(color);
+            this.matchInfo.matchColor = color;
+        }
     };
        
     MarbleBonusMatch.prototype.marblePop = function(count) {
         count = count;
-        // TODO what?
+
+        this.addMarbles(3);
     };
 
     MarbleBonusMatch.prototype.handleInput = function(input) {
@@ -144,6 +150,7 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles
     MarbleBonusMatch.prototype.addMarbles = function(count) {
         this.marblesCount += count;
 
+        this.marblesCounter.reset(this.marblesCounter.x, this.marblesCounter.y);
         this.marblesCounter.show(this.marblesCount);
     };
     
