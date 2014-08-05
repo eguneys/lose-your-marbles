@@ -35,7 +35,8 @@ define(['phaser'], function(Phaser) {
     };
 
     LevelForeground.prototype.playDrawSound = function() {
-        this.fx.play('LEVEL1');
+        // TODO sync level sounds
+        this.fx.play('LEVEL' + this.level);
     };
 
     LevelForeground.prototype.updateMask = function() {

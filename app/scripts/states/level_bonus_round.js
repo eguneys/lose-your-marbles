@@ -1,7 +1,7 @@
 'use strict';
 
-define(['phaser', 'states/level_master', 'states/level_base_round', 'prefabs/marble_group', 'prefabs/marble_bonus_match'],
-       function(Phaser, LevelMasterState, LevelBaseRoundState, MarbleGroup, MarbleBonusMatch) {
+define(['phaser', 'states/level_master', 'states/level_base_round', 'prefabs/marble_group', 'prefabs/marble_bonus_match', 'prefabs/level_splash'],
+       function(Phaser, LevelMasterState, LevelBaseRoundState, MarbleGroup, MarbleBonusMatch, LevelSplash) {
     
     function LevelBonusRoundState() {
         LevelBaseRoundState.call(this);
@@ -13,16 +13,31 @@ define(['phaser', 'states/level_master', 'states/level_base_round', 'prefabs/mar
     LevelBonusRoundState.prototype.create = function() {
         LevelBaseRoundState.prototype.create.call(this);
 
+        var level = this.levelData.level;
+
+        this.levelSplash = new LevelSplash(this.game, level, undefined, true);
+
+        this.levelSplash.x = (this.game.width - this.levelSplash.width) / 2;
+        this.levelSplash.y = (this.game.height - this.levelSplash.height) / 2;
+
         this.bonusMatch = new MarbleBonusMatch(this.game, this.levelData, this.renderLayer, this.fx);
         this.bonusMatch.x = 53;
         this.bonusMatch.y = 20;
         this.bonusMatch.alpha = 0;
 
-        this.bonusMatch.onMatchEnd.add(function() {
+        this.bonusMatch.onMatchEnd.add(function(isWin) {
             this.roundState = LevelBaseRoundState.States.ROUND_END;
+            this.roundWinner = isWin;
         }, this);
 
         this.roundStart();
+    };
+
+    LevelBonusRoundState.prototype.roundStart = function() {
+        this.tweenIntro()
+            .onComplete.add(function() {
+                this.matchStart();
+            }, this);
     };
     
     LevelBonusRoundState.prototype.matchStart = function() {
@@ -56,6 +71,17 @@ define(['phaser', 'states/level_master', 'states/level_base_round', 'prefabs/mar
         if (this.roundState === LevelBaseRoundState.States.PLAYING) {
             this.bonusMatch.updateTimer();
         }
+    };
+
+    LevelBonusRoundState.prototype.tweenIntro = function() {
+        var tweenLevelSplash = this.game.add.tween(this.levelSplash)
+                .to({alpha:0}, 1000, Phaser.Easing.Linear.None, true);
+        
+        var tweenFadeOff = this.fadeBg.tweenFadeOff();
+
+        tweenLevelSplash.chain(tweenFadeOff);
+        
+        return tweenLevelSplash;
     };
 
     return LevelBonusRoundState;

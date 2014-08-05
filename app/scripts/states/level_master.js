@@ -48,8 +48,9 @@ define(['prefabs/fade_tween'], function(FadeTween) {
         decideLevelState: function() {
             if (this.isFirstLevel()) {
                 // TODO debug
-                this.bonusLevel();
-                //this.nextLevel();
+                //this.bonusLevel();
+                
+                this.nextLevel();
             } else if (this.getWinningPlayer() !== -1) {
                 if (!this.isBonusLevel() && this.getLevel() <= 3) {
                     this.bonusLevel();
@@ -70,7 +71,7 @@ define(['prefabs/fade_tween'], function(FadeTween) {
         },
 
         nextLevel: function() {
-
+            this.levelData.isBonus = false;
             this.levelData.level++;
             
             this.levelData.players.forEach(function(p) {

@@ -55,8 +55,10 @@ define(['phaser',
 
             this.pauseMenu = new PauseMenu(this.game, this.renderLayer, level, this.fx);
 
-            this.fadeBg = new FadeTween(this.game, 0xffffff, 0);
-            this.renderLayer.add(this.fadeBg);
+            this.fadeBg = new FadeTween(this.game, 0xffffff, 1);
+            this.game.add.existing(this.fadeBg);
+            this.fadeBg.alpha = 0;
+            // set alpha to 0 afterwards otherwise it doesn't work :S
             
             this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
             this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
@@ -277,6 +279,8 @@ define(['phaser',
             tween.onComplete.add(function() {
                 this.game.state.start('main-menu');
             }, this);
+
+            tween.start();
         },
 
         playSoundOutro: function(outro) {

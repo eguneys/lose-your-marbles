@@ -13,11 +13,12 @@ define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number',
         
         this.marbleCounter = new MarbleCounter(this.game, this, this.fx, color, popPos);
         this.marbleCounter.y = height * 9/15;
-        
+
         this.score = new RoundScore(this.game, 0, 0, level, score);
         if (!score || score > 5) {
             this.score.alpha = 0;
-        }
+        }        
+
         this.add(this.score);
 
         this.redNumbers = this.game.add.group(this);

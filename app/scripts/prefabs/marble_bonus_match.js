@@ -11,12 +11,13 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles
         this.status = MarbleBonusMatch.State.INITIAL;
 
         this.timeLeft = 90;
+        this.marblesTarget = 10;
         this.marblesCount = 0;
         
         var p1Info = {
             pos: { x: 0, y: 0 },
             matchColor: Marble.Color.GREEN,
-            score: 10,
+            score: 0,
             skill: 1
             //skill: levelData.players[MarbleBonusMatch.Player.ONE].skill,
             //score: levelData.players[MarbleBonusMatch.Player.ONE].score
@@ -79,15 +80,25 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles
     };
 
     MarbleBonusMatch.prototype.marbleFull = function() {
+        this.timesUp();
+    };
+
+    MarbleBonusMatch.prototype.timesUp = function() {
         if (this.state === MarbleBonusMatch.State.END) { return; }
         this.state = MarbleBonusMatch.State.END;
-        
+
         this.matchEnd();
 
-        this.tweenMatchEnd();
-        
+        var targetReached = this.marblesCount >= this.marblesTarget;
+
+        if (targetReached) {
+            this.tweenMatchEndGood();
+        } else {
+            this.tweenMatchEndBad();
+        }
+
         this.game.time.events.add(2000, function() {
-            this.onMatchEnd.dispatch();
+            this.onMatchEnd.dispatch(targetReached);
         }, this);
     };
     
@@ -141,10 +152,16 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles
     };
 
     MarbleBonusMatch.prototype.updateTimer = function() {
+        if (this.state === MarbleBonusMatch.State.END) { return; }
+        
         var elapsed = this.game.time.elapsed;
         this.timeLeft -= elapsed / 1000;
 
         this.timer.show(this.timeLeft);
+
+        if (this.timeLeft <= 0) {
+            this.timesUp();
+        }
     };
 
     MarbleBonusMatch.prototype.addMarbles = function(count) {
@@ -152,10 +169,18 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles
 
         this.marblesCounter.reset(this.marblesCounter.x, this.marblesCounter.y);
         this.marblesCounter.show(this.marblesCount);
+
+        if (this.marblesCount >= this.marblesTarget) {
+            this.timesUp();
+        }
     };
     
-    MarbleBonusMatch.prototype.tweenMatchEnd = function() {
+    MarbleBonusMatch.prototype.tweenMatchEndGood = function() {
         // TODO
+    };
+
+    MarbleBonusMatch.prototype.tweenMatchEndBad = function() {
+        
     };
     
     MarbleBonusMatch.prototype.playSoundVictory = function() {

@@ -1736,11 +1736,25 @@
 		"spriteSourceSize": {"x":0,"y":0,"w":78,"h":92},
 		"sourceSize": {"w":78,"h":92}
     },
-
     "DIALOG_TEXT_LEVEL": {
 		"frame": {"x":269, "y":1137, "w":185, "h":70},
 		"spriteSourceSize": {"x":0,"y":0,"w":185,"h":70},
 		"sourceSize": {"w":185,"h":70}
+    },
+    "DIALOG_TEXT_BONUS": {
+		"frame": {"x":2, "y":1136, "w":245, "h":72},
+		"spriteSourceSize": {"x":0,"y":0,"w":245,"h":72},
+		"sourceSize": {"w":245,"h":72}
+    },
+    "DIALOG_TEXT_ROUND": {
+		"frame": {"x":0, "y":1212, "w":264, "h":76},
+		"spriteSourceSize": {"x":0,"y":0,"w":264,"h":76},
+		"sourceSize": {"w":264,"h":76}
+    },
+    "DIALOG_TEXT_PRACTICE": {
+		"frame": {"x":266, "y":1212, "w":362, "h":64},
+		"spriteSourceSize": {"x":0,"y":0,"w":362,"h":64},
+		"sourceSize": {"w":362,"h":64}
     },
     "DIALOG_TEXT_DIGITS": {
 		"frame": {"x":273, "y":934, "w":363, "h":70},

@@ -17,7 +17,14 @@ define(['phaser'], function(Phaser) {
 
     FadeTween.prototype.tweenFadeOn = function() {
         var tween = this.game.add.tween(this)
-                .to({alpha: 1}, 2000, Phaser.Easing.Linear.None, true);
+                .to({alpha: 1}, 2000, Phaser.Easing.Linear.None);
+
+        return tween;
+    };
+
+    FadeTween.prototype.tweenFadeOff = function() {
+        var tween = this.game.add.tween(this)
+                .to({alpha: 0}, 2000, Phaser.Easing.Linear.None);
 
         return tween;
     };

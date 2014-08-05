@@ -1,9 +1,13 @@
 'use strict';
 
 define(['phaser'], function(Phaser) {
-    function LevelSplash(game, level, parent) {
+    function LevelSplash(game, level, parent, isBonus) {
         Phaser.Group.call(this, game, parent);
 
+        if (isBonus) {
+            this.bonusText = this.create(0, -60, 'marbleatlas', 'DIALOG_TEXT_BONUS');
+        }
+        
         this.levelText = this.create(0, 0, 'marbleatlas', 'DIALOG_TEXT_LEVEL');
 
         this.levelDigit = this.create(0, 0, 'marbleatlas', 'DIALOG_TEXT_DIGITS');

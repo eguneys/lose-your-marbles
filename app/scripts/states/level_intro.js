@@ -90,18 +90,75 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
             
             var tweenFadeOut = this.game.add.tween(this.fadeBg)
                 .to({alpha: 0}, 2000, Phaser.Easing.Linear.None);
+
+            var tweenCustomIntro = this.tweenCustomIntro();
             
             var drawTweens = this.foreground.getDrawTweens();
 
             tweenLevelSplash.chain(tweenFadeOut);
-            tweenFadeOut.chain(drawTweens.first);
-
-            tweenFadeOut.onComplete.add(function() {
+            tweenFadeOut.chain(tweenCustomIntro);
+            tweenCustomIntro.chain(drawTweens.first);
+            
+            tweenCustomIntro.onStart.add(function() {
                 this.foreground.playDrawSound();
+            }, this);
+            
+            drawTweens.first.onStart.add(function() {
+                //this.foreground.playDrawSound();
             }, this);
 
             return drawTweens.last;
         },
+
+        tweenCustomIntro: function() {
+            var level = this.levelData.level;
+            
+            var tweens = [
+                this.tweenLevel1,
+                this.tweenLevel2,
+                this.tweenLevel3,
+                this.tweenLevel4,
+                this.tweenLevel5
+            ];
+
+            return tweens[level - 1].call(this);
+        },
+
+        tweenLevel1: function() {
+            var tween = this.game.add.tween({x:1})
+                    .to({x: 1}, 1);
+
+            return tween;
+        },
+
+        tweenLevel2: function() {
+            var tween = this.game.add.tween({x:0})
+                    .to({x: 1}, 6000);
+
+            return tween;
+        },
+
+        tweenLevel3: function() {
+            var tween = this.game.add.tween({x:0})
+                    .to({x: 1}, 8000);
+
+            return tween;
+        },
+
+        tweenLevel4: function() {
+            var tween = this.game.add.tween({x:0})
+                    .to({x: 1}, 9000);
+
+            return tween;
+        },
+
+        tweenLevel5: function() {
+            var tween = this.game.add.tween({x:0})
+                    .to({x: 1}, 9000);
+
+            return tween;
+        },
+        
 
         tweenSkillMenuPop: function() {
             var tween = this.game.add.tween(this.skillMenu.scale)
