@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser'], function(Phaser) {
+define(['phaser', 'util'], function(Phaser, Util) {
     // http://jsbin.com/rokelulo/21/edit?js,output
     function BounceMarble(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
@@ -54,7 +54,7 @@ define(['phaser'], function(Phaser) {
     };
 
     BounceMarble.prototype.playSoundBounce = function() {
-        this.fx.play('BOUNCE');
+        Util.playSfx(this.fx, 'BOUNCE');
     };
 
 

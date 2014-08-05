@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
+define(['phaser', 'util', 'prefabs/red_marble'], function(Phaser, Util, RedMarble) {
     
     function Menu(game, fx) {
         Phaser.Group.call(this, game);
@@ -188,7 +188,7 @@ define(['phaser', 'prefabs/red_marble'], function(Phaser, RedMarble) {
     };
 
     Menu.prototype.playSelectSound = function() {
-        this.fx.play('SELECT2');
+        Util.playSfx(this.fx, 'SELECT2');
     };
 
     Menu.prototype.stopSound = function() {

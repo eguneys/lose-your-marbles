@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser'], function(Phaser) {
+define(['phaser', 'util'], function(Phaser, Util) {
     function SkillDigit(game, x, y, digit, fx) {
         this.digit = digit;
 
@@ -28,7 +28,7 @@ define(['phaser'], function(Phaser) {
     };
 
     SkillDigit.prototype.playWhirlSound = function() {
-        this.fx.play('NUSPIN');
+        Util.playSfx(this.fx, 'NUSPIN');
     };
     
     SkillDigit.prototype.whirlDecrease = function() {

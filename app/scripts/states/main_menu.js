@@ -58,6 +58,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
             } else if (this.menuState === MainMenuState.States.OPTIONS) {
                 if (this.optionsMenu.select(key) !== -1) {
                     this.menu.stopSound();
+                    this.menu.playSelectSound();
                 }
             }
         },
@@ -101,7 +102,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
         selectPlay: function() {
             this.menuState = MainMenuState.States.TRANSITION;
             this.tweenPlayState();
-            this.fx.play('ZOOMIN');
+            Util.playSfx(this.fx, 'ZOOMIN');
         },
 
         selectOptions: function() {
@@ -120,7 +121,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
                     .to({x: 1, y: 1}, 500, Phaser.Easing.Bounce.Out);
 
             tweenMainMenuPop.onStart.add(function() {
-                this.fx.play('ZOOMIN');
+                Util.playSfx(this.fx, 'ZOOMIN');
             }, this);
 
             tweenMainMenuPop.onComplete.add(this.menuPopped, this);
@@ -158,7 +159,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
                     .to({ x: 1, y: 1}, 300, Phaser.Easing.Bounce.Out);
 
             tweenMenuGrow.onStart.add(function() {
-                this.fx.play('ZOOMIN');
+                Util.playSfx(this.fx, 'ZOOMIN');
             }, this);
 
             tweenMenuGrow.onComplete.add(function() {
@@ -168,7 +169,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
             tweenMenuShrink.chain(tweenMenuGrow);
 
             tweenMenuShrink.start();
-            this.fx.play('ZOOMIN');
+            Util.playSfx(this.fx, 'ZOOMIN');
         }
     };
 

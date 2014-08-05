@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/round_splash', 'prefabs/blue_number'], function(Phaser, RoundSplash, BlueNumber) {
+define(['phaser', 'util', 'prefabs/round_splash', 'prefabs/blue_number'], function(Phaser, Util, RoundSplash, BlueNumber) {
     function RoundForeground(game, round, parent, fx) {
         Phaser.Group.call(this, game, parent);
 

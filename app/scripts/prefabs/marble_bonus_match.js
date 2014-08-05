@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles_timer', 'prefabs/base_number', 'prefabs/marble'], function(Phaser, MarbleGroup, MarbleHud, MarblesTimer,BaseNumber, Marble) {
+define(['phaser', 'util', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles_timer', 'prefabs/base_number', 'prefabs/marble'], function(Phaser, Util, MarbleGroup, MarbleHud, MarblesTimer,BaseNumber, Marble) {
     function MarbleBonusMatch(game, levelData, parent, fx) {
         Phaser.Group.call(this, game, parent);
 
@@ -184,11 +184,11 @@ define(['phaser', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs/marbles
     };
     
     MarbleBonusMatch.prototype.playSoundVictory = function() {
-        this.fx.play('VICTORY');
+        Util.playSfx(this.fx, 'VICTORY');
     };
 
     MarbleBonusMatch.prototype.playSoundLoss = function() {
-        this.fx.play('LOSS');
+        Util.playSfx(this.fx, 'LOSS');
     };
     
     return MarbleBonusMatch;

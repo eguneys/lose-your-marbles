@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser'], function(Phaser) {
+define(['phaser', 'util'], function(Phaser, Util) {
     function LevelForeground(game, level, fx) {
         Phaser.Group.call(this, game);
 
@@ -36,7 +36,7 @@ define(['phaser'], function(Phaser) {
 
     LevelForeground.prototype.playDrawSound = function() {
         // TODO sync level sounds
-        this.fx.play('LEVEL' + this.level);
+        Util.playSfx(this.fx, 'LEVEL' + this.level);
     };
 
     LevelForeground.prototype.updateMask = function() {

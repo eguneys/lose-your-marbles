@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
+define(['phaser', 'util', 'prefabs/marble'], function(Phaser, Util, Marble) {
     function MarbleGroup(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
 
@@ -535,7 +535,7 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
     
     MarbleGroup.prototype.playSoundUp = function() {
         var sound = this.game.rnd.pick(['MOVE1', 'MOVE3']);
-        this.fx.play(sound);
+        Util.playSfx(this.fx, sound);
     };
     
     MarbleGroup.prototype.playSoundDown = function() {
@@ -543,27 +543,29 @@ define(['phaser', 'prefabs/marble'], function(Phaser, Marble) {
     };
 
     MarbleGroup.prototype.playSoundRoll = function() {
-        this.fx.play('MOVE2');
+        Util.playSfx(this.fx, 'MOVE2');
     };
 
     MarbleGroup.prototype.playSoundCantMove = function() {
-        this.fx.play('cantmove');
+        Util.playSfx(this.fx, 'cantmove');
     };
 
     MarbleGroup.prototype.playSoundLineUp = function(count) {
-        this.fx.play('LNUP' + count + 'FST');
+        Util.playSfx(this.fx, 'LNUP' + count + 'FST');
     };
 
     MarbleGroup.prototype.playSoundStreak = function(streak) {
         var sound = Math.min(Math.pow(2, (streak - 1)), 32);
-        this.fx.play(sound);
+
+        Util.playSfx(this.fx, sound);
+
         if (streak >= 6) {
-            this.fx.play('OVER6');
+            Util.playSfx(this.fx, 'OVER6');
         }
     };
 
     MarbleGroup.prototype.playSoundDump = function(count) {
-        this.fx.play('DUMP' + count);
+        Util.playSfx(this.fx, 'DUMP' + count);
     };
     
     MarbleGroup.prototype.thereIsMarble = function(row, col) {

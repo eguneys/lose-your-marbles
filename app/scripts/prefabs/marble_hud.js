@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number', 'prefabs/pop_number', 'prefabs/bounce_marble', 'prefabs/round_score'], function(Phaser, Marble, BlueNumber, RedNumber, PopNumber, BounceMarble, RoundScore) {
+define(['phaser', 'util', 'prefabs/marble', 'prefabs/blue_number', 'prefabs/red_number', 'prefabs/pop_number', 'prefabs/bounce_marble', 'prefabs/round_score'], function(Phaser, Util, Marble, BlueNumber, RedNumber, PopNumber, BounceMarble, RoundScore) {
     function MarbleHud(game, parent, fx, color, level, score, height, toPosX) {
         Phaser.Group.call(this, game, parent);
 

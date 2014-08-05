@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefabs/select_sprite'], function(Phaser, BaseMenu, VolumeSprite, SelectSprite) {
+define(['phaser', 'config', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefabs/select_sprite'], function(Phaser, Config, BaseMenu, VolumeSprite, SelectSprite) {
     function OptionsMenu(game, parent) {
         BaseMenu.call(this, game, parent, OptionsMenu.Items.MUSIC);
 
@@ -38,12 +38,12 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefabs/select_
             this.p2Controls
         ];
         
-        this.musicVolume = new VolumeSprite(game);
+        this.musicVolume = new VolumeSprite(game, Config.options.musicVolume * 10);
         this.musicVolume.x = 200;
         this.musicVolume.y = 95;
         this.add(this.musicVolume);
 
-        this.sfxVolume = new VolumeSprite(game);
+        this.sfxVolume = new VolumeSprite(game, Config.options.sfxVolume * 10);
         this.sfxVolume.x = 200;
         this.sfxVolume.y = 125;
         this.add(this.sfxVolume);
@@ -97,20 +97,24 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefabs/select_
     OptionsMenu.prototype.selectLeftRight = function(direction) {
         var newIdx = this.menuIdx;
 
+        var volume;
+        
         switch(newIdx) {
         case OptionsMenu.Items.MUSIC:
             if (direction === BaseMenu.Select.LEFT) {
-                this.musicVolume.volumeDown();
+                volume = this.musicVolume.volumeDown();
             } else {
-                this.musicVolume.volumeUp();
+                volume = this.musicVolume.volumeUp();
             }
+            Config.setMusicVolume(volume / 10);
             break;
         case OptionsMenu.Items.SFX:
             if (direction === BaseMenu.Select.LEFT) {
-                this.sfxVolume.volumeDown();
+                volume = this.sfxVolume.volumeDown();
             } else {
-                this.sfxVolume.volumeUp();
+                volume = this.sfxVolume.volumeUp();
             }
+            Config.setSfxVolume(volume / 10);
             break;
         case OptionsMenu.Items.C_P1:
             this.controlRotate(0, direction);

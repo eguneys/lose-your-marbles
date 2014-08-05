@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser'], function(Phaser) {
+define(['phaser', 'util'], function(Phaser, Util) {
     function BlueNumber(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
 
@@ -42,11 +42,11 @@ define(['phaser'], function(Phaser) {
     };
 
     BlueNumber.prototype.playSound = function() {
-        this.fx.play('SELECT2');
+        Util.playSfx(this.fx, 'SELECT2');
     };
 
     BlueNumber.prototype.playSoundGo = function() {
-        this.fx.play('GO');
+        Util.playSfx(this.fx, 'GO');
     };
     
     return BlueNumber;

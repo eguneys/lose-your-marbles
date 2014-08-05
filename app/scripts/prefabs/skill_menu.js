@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser, RedMarble, SkillDigit) {
+define(['phaser', 'util', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser, Util, RedMarble, SkillDigit) {
     function SkillMenu(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
 
@@ -90,7 +90,8 @@ define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser,
         
         this.game.time.events.add(Phaser.Timer.SECOND * 14/15, function() {
             this.menuItems[this.menuIdx].whirl();
-            this.fx.play('SLAP').onStop.addOnce(function() {
+            
+            Util.playSfx(this.fx, 'SLAP').onStop.addOnce(function() {
                 this.menuItems[this.menuIdx].playWhirlSound();
             }, this);
 
@@ -103,7 +104,7 @@ define(['phaser', 'prefabs/red_marble', 'prefabs/skill_digit'], function(Phaser,
     };
 
     SkillMenu.prototype.playNavigateSound = function() {
-        this.fx.play('SELECT2');
+        Util.playSfx(this.fx, 'SELECT2');
     };
 
     SkillMenu.prototype.selectDone = function() {

@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/base_number'], function(Phaser, BaseNumber) {
+define(['phaser', 'util', 'prefabs/base_number'], function(Phaser, Util, BaseNumber) {
     function MarblesTimer(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
 

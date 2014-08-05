@@ -13,7 +13,7 @@ define(['phaser', 'prefabs/fade_tween', 'util'], function(Phaser, FadeTween, Uti
             this.game.add.existing(this.fadeBg);
             
             this.tweenFadeState();
-            this.fx.play('THEME');
+            Util.playSfx(this.fx, 'THEME');
         },
 
         tweenFadeState: function() {

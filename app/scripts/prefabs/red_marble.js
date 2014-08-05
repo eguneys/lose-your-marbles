@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser'], function(Phaser) {
+define(['phaser', 'util'], function(Phaser, Util) {
     
     function RedMarble(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
@@ -106,13 +106,13 @@ define(['phaser'], function(Phaser) {
         if (this.currentSound !== '') {
             if (this.soundInitial) {
                 this.soundInitial = false;
-                this.fx.play(this.currentSound);
+                Util.playSfx(this.fx, this.currentSound);
             } else if (this.loopSound !== '') {
                 this.soundTimer -= this.game.time.elapsed;
 
                 if (this.soundTimer <= 0) {
                     this.soundTimer = 1000;
-                    this.fx.play(this.loopSound);
+                    Util.playSfx(this.fx, this.loopSound);
                 }
             }
         }

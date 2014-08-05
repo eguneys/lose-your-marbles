@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/red_number'], function(Phaser, RedNumber) {
+define(['phaser', 'util', 'prefabs/red_number'], function(Phaser, Util, RedNumber) {
     function PopNumber(game, parent, fx) {
         Phaser.Group.call(this, game, parent);
 
@@ -26,7 +26,7 @@ define(['phaser', 'prefabs/red_number'], function(Phaser, RedNumber) {
     };
 
     PopNumber.prototype.playSoundPop = function() {
-        this.fx.play('POOF');
+        Util.playSfx(this.fx, 'POOF');
     };
 
     return PopNumber;

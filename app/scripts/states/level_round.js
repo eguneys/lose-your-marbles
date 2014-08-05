@@ -284,15 +284,15 @@ define(['phaser',
         },
 
         playSoundOutro: function(outro) {
-            this.fx.play(outro);
+            Util.playSfx(this.fx, outro);
         },
 
         playSoundIntro: function(intro) {
-            this.fx.play(intro);
+            Util.playSfx(this.fx, intro);
         },
 
         playSoundZoomIn: function() {
-            this.fx.play('ZOOMIN');
+            Util.playSfx(this.fx, 'ZOOMIN');
         }
     };
 

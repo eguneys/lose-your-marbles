@@ -1,10 +1,11 @@
 'use strict';
 
 define(['phaser'], function(Phaser) {
-    function VolumeSprite(game) {
+    function VolumeSprite(game, initialVolume) {
         Phaser.Group.call(this, game);
 
-        this.volume = 10;
+        this.maxVolume = 10;
+        this.volume = initialVolume;
 
         this.bg = this.create(0, 0, 'marbleatlas',
                               'OPTIONS_MENU_VOLUME_BG');
@@ -24,17 +25,21 @@ define(['phaser'], function(Phaser) {
     VolumeSprite.prototype.constructor = VolumeSprite;
 
     VolumeSprite.prototype.volumeUp = function() {
-        if (this.volume >= 10) { return; }
+        if (this.volume >= 10) { return this.volume; }
         this.volume++;
 
         this.updateMask();
+
+        return this.volume;
     };
 
     VolumeSprite.prototype.volumeDown = function() {
-        if (this.volume <= 0) { return; }
+        if (this.volume <= 0) { return this.volume; }
         this.volume--;
 
         this.updateMask();
+
+        return this.volume;
     };
 
     VolumeSprite.prototype.updateMask = function() {

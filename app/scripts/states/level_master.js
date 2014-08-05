@@ -55,7 +55,11 @@ define(['prefabs/fade_tween'], function(FadeTween) {
                 if (!this.isBonusLevel() && this.getLevel() <= 3) {
                     this.bonusLevel();
                 } else {
-                    this.nextLevel();
+                    if (this.getLevel() >= 5) {
+                        this.endLevels();
+                    } else {
+                        this.nextLevel();
+                    }
                 }
             } else {
                 this.nextRound();
@@ -86,6 +90,10 @@ define(['prefabs/fade_tween'], function(FadeTween) {
         nextRound: function() {
             this.levelData.round++;
             this.game.state.start('level-round', true, false, this.levelData, this.transitionData);
+        },
+
+        endLevels: function() {
+            this.game.state.start('game-end');
         },
 
         isBonusLevel: function() {

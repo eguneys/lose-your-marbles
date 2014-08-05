@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/base_menu'], function(Phaser, BaseMenu) {
+define(['phaser', 'util', 'prefabs/base_menu'], function(Phaser, Util, BaseMenu) {
     
     function PauseMenu(game, parent, level, fx) {
         BaseMenu.call(this, game, parent, PauseMenu.Items.NO, 'LEVEL-0' + level + '_PAUSE_MENU_BG');
@@ -43,7 +43,7 @@ define(['phaser', 'prefabs/base_menu'], function(Phaser, BaseMenu) {
     };
 
     PauseMenu.prototype.playSoundNavigate = function() {
-        this.fx.play('SELECT2');
+        Util.playSfx(this.fx, 'SELECT2');
     };
     
     return PauseMenu;

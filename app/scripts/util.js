@@ -1,6 +1,6 @@
 'use strict';
 
-define([], function() {
+define(['config'], function(Config) {
     Array.prototype.mapConcat = function(str) {
         return this.map(function(item) {
             return str + item;
@@ -30,6 +30,10 @@ define([], function() {
             fx.addMarker(sprite, start, end - start);
         }
         return fx;
+    };
+
+    Util.prototype.playSfx = function(fx, key) {
+        return fx.play(key, 0, Config.options.sfxVolume);
     };
 
     return new Util();
