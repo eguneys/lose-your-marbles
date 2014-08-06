@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_menu', 'prefabs/fade_tween', 'util'], function(Phaser, BaseMenu, MainMenu, OptionsMenu, FadeTween, Util) {
+define(['phaser', 'config', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_menu', 'prefabs/fade_tween', 'util'], function(Phaser, Config, BaseMenu, MainMenu, OptionsMenu, FadeTween, Util) {
     function MainMenuState() {}
 
     MainMenuState.States = {
@@ -84,6 +84,7 @@ define(['phaser', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_men
                 this.selectPlay();
                 break;
             case MainMenu.Items.QUIT:
+                Config.options.onGameQuit.call(Config, this.levelData);
                 break;
             }
         },

@@ -20,6 +20,8 @@ define(['phaser', 'config',
                                              LevelBonusRoundState,
                                              GameEndState) {
     function Game(options) {
+        this.config = config;
+        
         config.options = options || config.options;
     }
 
@@ -41,6 +43,10 @@ define(['phaser', 'config',
             game.state.start('boot');
 
             this.game = game;
+        },
+
+        destroy: function() {
+            this.game.destroy();
         },
 
         goFullScreen: function() {

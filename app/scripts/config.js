@@ -12,6 +12,9 @@ define([], function() {
             musicVolume: 0.8,
             onGameEnd: function(levelData) {
                 console.log('Congratz, you finished all the levels.');
+            },
+            onGameQuit: function() {
+                console.log('Bye.');
             }
         };
     }

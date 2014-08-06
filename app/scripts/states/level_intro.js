@@ -44,7 +44,7 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
                 tweenIntro.chain(tweenSkillMenuPop);
 
                 tweenSkillMenuPop.onStart.add(function() {
-                    Util.playSfx('ZOOMIN');
+                    Util.playSfx(this.fx, 'ZOOMIN');
                 }, this);
                 
                 this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -81,7 +81,7 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
             
             this.tweenSkillMenuShrink();
 
-            Util.playSfx('ZOOMIN');
+            Util.playSfx(this.fx, 'ZOOMIN');
         },
         
         tweenIntro: function() {
@@ -147,14 +147,14 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
 
         tweenLevel4: function() {
             var tween = this.game.add.tween({x:0})
-                    .to({x: 1}, 9000);
+                    .to({x: 1}, 10000);
 
             return tween;
         },
 
         tweenLevel5: function() {
             var tween = this.game.add.tween({x:0})
-                    .to({x: 1}, 9000);
+                    .to({x: 1}, 8000);
 
             return tween;
         },
