@@ -13,7 +13,9 @@ define(['config'], function(Config) {
         });
     };
 
-    function Util() {}
+    function Util() {
+        this.Config = Config;
+    }
 
     Util.prototype.parseAudioSprite = function(game, key, json) {
         key = key || 'sfx';

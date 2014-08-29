@@ -3,6 +3,7 @@
 define([], function() {
     function Config() {
         this.options = {
+            env: 'development',
             parent: 'game-area',
             paths: {
                 sprites: '/data/images/sprites',

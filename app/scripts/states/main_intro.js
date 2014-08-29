@@ -18,7 +18,7 @@ define(['phaser', 'prefabs/fade_tween', 'util'], function(Phaser, FadeTween, Uti
 
         tweenFadeState: function() {
             var tween = this.game.add.tween(this.fadeBg)
-                    .to({alpha: 1}, 10000, Phaser.Easing.Linear.None, true);
+                    .to({alpha: 1}, 2000, Phaser.Easing.Linear.None, true);
 
             tween.onComplete.add(function() {
                 this.game.state.start('main-menu');

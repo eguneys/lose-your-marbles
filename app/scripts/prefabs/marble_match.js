@@ -110,9 +110,10 @@ define(['phaser', 'util', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs
     
     MarbleMatch.prototype.marbleMatched = function(player, color, count, streak) {
 
-        //TODO uncomment this for DEBUG
-        this.marbleFull(player);
-        return;
+        if (Util.Config.options.env === 'development') {
+            this.marbleFull(player);
+            return;
+        }
         
         var opponent = (player + 1) % 2;
 

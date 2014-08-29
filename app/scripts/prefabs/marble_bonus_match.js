@@ -11,7 +11,12 @@ define(['phaser', 'util', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs
         this.status = MarbleBonusMatch.State.INITIAL;
 
         this.timeLeft = 90;
-        this.marblesTarget = 10;
+        this.marblesTarget = 100;
+
+        if (Util.Config.options.env === 'development') {
+            this.marblesTarget = 10;
+        }
+        
         this.marblesCount = 0;
         
         var p1Info = {
