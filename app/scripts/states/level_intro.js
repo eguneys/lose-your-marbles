@@ -8,7 +8,7 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
             this.levelData = levelData;
             this.transitionData = transitionData;
         },
-        
+
         create: function() {
             this.fx = Util.parseAudioSprite(this.game);
             

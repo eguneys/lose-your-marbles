@@ -22,6 +22,14 @@ define(['phaser', 'config'], function(Phaser, config) {
         create: function() {
             //this.game.state.start('level-master');
             this.game.state.start('main-intro');
+        },
+
+        loadUpdate: function() {
+            config.options.onLoadUpdate.call(config, this.load.progress);
+        },
+
+        shutdown: function() {
+            config.options.onLoadComplete.call(config);
         }
     };
 

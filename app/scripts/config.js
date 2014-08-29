@@ -15,6 +15,12 @@ define([], function() {
             },
             onGameQuit: function() {
                 console.log('Bye.');
+            },
+            onLoadUpdate: function(progress) {
+                console.log('Load: ' + progress);
+            },
+            onLoadComplete: function() {
+                console.log('Load: 100');
             }
         };
     }

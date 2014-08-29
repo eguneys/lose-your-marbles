@@ -16,7 +16,7 @@ require.config({
         bootstrapTooltip: '../bower_components/bootstrap/js/tooltip',
         bootstrapTransition: '../bower_components/bootstrap/js/transition',
         bootstrap: '../bower_components/bootstrap/dist/js/bootstrap',
-        phaser: '../bower_components/phaser-official/build/custom/phaser-arcade-physics',
+        phaser: '../bower_components/phaser-official/dist/phaser-arcade-physics',
         requirejs: '../bower_components/requirejs/require',
         //'phaser': '../bower_components/phaser-official/build/phaser'
     },

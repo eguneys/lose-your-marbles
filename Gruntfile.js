@@ -189,7 +189,7 @@ module.exports = function (grunt) {
                 options: {
                     baseUrl: '<%= yeoman.app %>/scripts',
                     paths: {
-                        phaser: '../bower_components/phaser-official/build/custom/phaser-arcade-physics'
+                        phaser: '../bower_components/phaser-official/dist/phaser-arcade-physics'
 
                     },
                     shim: {
