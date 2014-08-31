@@ -1,7 +1,8 @@
 'use strict';
 
 define(['phaser', 'util', 'prefabs/red_marble'], function(Phaser, Util, RedMarble) {
-    
+
+    // TODO Merge with base_menu
     function Menu(game, fx) {
         Phaser.Group.call(this, game);
 
@@ -156,6 +157,13 @@ define(['phaser', 'util', 'prefabs/red_marble'], function(Phaser, Util, RedMarbl
             break;
         }
 
+        this.makeSelection(newIdx, newSamIdx);
+        
+        return this.menuIdx;
+    };
+
+    Menu.prototype.makeSelection = function(newIdx, newSamIdx) {
+
         if (newIdx !== this.menuIdx) {
             this.menuItems[this.menuIdx].animations.play('off');
             this.menuIdx = newIdx;
@@ -178,13 +186,38 @@ define(['phaser', 'util', 'prefabs/red_marble'], function(Phaser, Util, RedMarbl
                 this.redMarble.stopSound();
             }
             this.redMarble.x = this.menuItems[this.menuIdx].x - this.redMarble.width;
-        } else if (newSamIdx !== this.samIdx) {
+        }
+
+        if (newSamIdx !== this.samIdx) {
             this.menuItems[this.samIdx].animations.play('off');
             this.samIdx = newSamIdx;
             this.menuItems[this.samIdx].animations.play('on');
         }
+    };
 
-        return this.menuIdx;
+    Menu.prototype.tap = function(pos) {
+        var items = this.menuItems.filter(function(item) {
+            if (Phaser.Rectangle.containsPoint(item.getBounds(), pos)) {
+                return true;
+            }
+            return false;
+        });
+
+        if (items.length > 0) {
+            var itemIdx = this.menuItems.indexOf(items[0]);
+            var samIdx = this.samIdx;
+            
+            if (itemIdx >= 5) {
+                samIdx = itemIdx;
+                itemIdx = Menu.Items.SAM;
+            }
+            
+            this.makeSelection(itemIdx, samIdx);
+
+            return this.menuIdx;
+        }
+
+        return -1;
     };
 
     Menu.prototype.playSelectSound = function() {

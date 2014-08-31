@@ -68,7 +68,7 @@ define(['phaser', 'config', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefa
         'mouse': 'OPTIONS_MENU_CONTROL_MOUSE',
         'gpad': 'OPTIONS_MENU_CONTROL_GPAD_'
     };
-
+    
     OptionsMenu.prototype.select = function(direction) {
         var newIdx = this.menuIdx;
 
@@ -87,11 +87,7 @@ define(['phaser', 'config', 'prefabs/base_menu', 'prefabs/volume_sprite', 'prefa
             break;
         }
 
-        if (newIdx !== this.menuIdx) {
-            this.menuItems[this.menuIdx].animations.play('off');
-            this.menuIdx = newIdx;
-            this.menuItems[this.menuIdx].animations.play('on');
-        }
+        this.makeSelection(newIdx);
     };
 
     OptionsMenu.prototype.selectLeftRight = function(direction) {

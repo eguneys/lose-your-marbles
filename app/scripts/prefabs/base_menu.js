@@ -36,6 +36,15 @@ define(['phaser', 'prefabs/toggle_sprite'], function(Phaser, ToggleSprite) {
         DOWN: 3
     };
 
+
+    Menu.prototype.makeSelection = function(newIdx) {
+        if (newIdx !== this.menuIdx) {
+            this.menuItems[this.menuIdx].animations.play('off');
+            this.menuIdx = newIdx;
+            this.menuItems[this.menuIdx].animations.play('on');
+        }
+    };
+    
     Menu.prototype.addToggleMenuItem = function(x, y, atlas, keyOn, keyOff, menuIdx) {
         var menuItem = new ToggleSprite(this.game, x, y, atlas, keyOn, keyOff);
         this.add(menuItem);
@@ -45,6 +54,24 @@ define(['phaser', 'prefabs/toggle_sprite'], function(Phaser, ToggleSprite) {
     };
     
     Menu.prototype.getSelection = function() {
+        return this.menuIdx;
+    };
+
+    
+    Menu.prototype.tap = function(pos) {
+        var items = this.menuItems.filter(function(item) {
+            if (Phaser.Rectangle.containsPoint(item.getBounds(), pos)) {
+                return true;
+            }
+            return false;
+        });
+
+        if (items.length > 0) {
+            var itemIdx = this.menuItems.indexOf(items[0]);
+            
+            this.makeSelection(itemIdx);
+        }
+
         return this.menuIdx;
     };
 

@@ -21,7 +21,7 @@ define(['phaser', 'prefabs/marble', 'bot/strat', 'bot/quick_strat', 'bot/qrandom
         QUICK: 1,
         COLOR: 2,
         DUMP: 3,
-        STREAK: 4,
+        STREAK: 4
     };
 
     BotAI.prototype.update = function(state) {

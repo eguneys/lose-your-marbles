@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'config', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_menu', 'prefabs/fade_tween', 'util'], function(Phaser, Config, BaseMenu, MainMenu, OptionsMenu, FadeTween, Util) {
+define(['phaser', 'config', 'util/gestures', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/options_menu', 'prefabs/fade_tween', 'util'], function(Phaser, Config, Gesture, BaseMenu, MainMenu, OptionsMenu, FadeTween, Util) {
     function MainMenuState() {}
 
     MainMenuState.States = {
@@ -30,8 +30,14 @@ define(['phaser', 'config', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/o
             this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
             this.spacebarKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
             this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+
+            this.gesture = new Gesture(this.game);
             
             this.tweenFadeOut();
+        },
+
+        update: function() {
+            this.gesture.update();
         },
 
         gameStart: function() {
@@ -47,7 +53,36 @@ define(['phaser', 'config', 'prefabs/base_menu', 'prefabs/main_menu', 'prefabs/o
             this.spacebarKey.onDown.add(this.keyEnter, this);
             this.enterKey.onDown.add(this.keyEnter, this);
 
+            this.gesture.onTap.add(this.tapped, this);
+            this.gesture.onHold.add(this.holded, this);
+            
             this.menuState = MainMenuState.States.MAIN;
+        },
+
+        tapped: function(e, pos) {
+            if (this.menuState === MainMenuState.States.MAIN) {
+                if (this.menu.tap(pos) !== -1) {
+                    this.menu.playSelectSound();
+                }
+            } else if (this.menuState === MainMenuState.States.OPTIONS) {
+                if (this.optionsMenu.tap(pos) !== -1) {
+                    this.menu.stopSound();
+                    this.menu.playSelectSound();
+                }
+            }
+        },
+
+        holded: function(e, pos) {
+            if (this.menuState === MainMenuState.States.MAIN) {
+                if (this.menu.tap(pos) !== -1) {
+                    this.mainMenuSelect();
+                    this.menu.stopSound();
+                }
+            } else if (this.menuState === MainMenuState.States.OPTIONS) {
+                if (this.optionsMenu.tap(pos) !== -1) {
+                    this.optionsMenuSelect();
+                }
+            }
         },
 
         keyPress: function(key) {
