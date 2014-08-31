@@ -5,13 +5,13 @@ define(['phaser',
         'prefabs/round_foreground',
         'prefabs/pause_menu',
         'prefabs/fade_tween',
-        'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai', 'util'],
+        'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai', 'util', 'config'],
        function(Phaser,
                 LevelMasterState,
                 RoundForeground,
                 PauseMenu,
                 FadeTween,
-                MarbleGroup, MarbleMatch, BotAI, Util) {
+                MarbleGroup, MarbleMatch, BotAI, Util, Config) {
     function LevelRoundState() {}
 
     LevelRoundState.States = {
@@ -51,6 +51,17 @@ define(['phaser',
             this.match.onMatchEnd.add(function(winner) {
                 this.roundState = LevelRoundState.States.ROUND_END;
                 this.roundWinner = winner;
+
+                if (this.roundWinner === MarbleMatch.Player.ONE) {
+                    Config.options.onPlayerWin();
+                }
+            }, this);
+
+            this.match.onPlayerScored.add(function(player, color, count, streak) {
+                var points = count * (streak + 1);
+                if (player === MarbleMatch.Player.ONE) {
+                    Config.options.onPlayerScored(points, color);
+                }
             }, this);
 
             this.pauseMenu = new PauseMenu(this.game, this.renderLayer, level, this.fx);

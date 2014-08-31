@@ -22,6 +22,12 @@ define([], function() {
             },
             onLoadComplete: function() {
                 console.log('Load: 100');
+            },
+            onPlayerScored: function(points, color) {
+                console.log('points: ' + points);
+            },
+            onPlayerWin: function() {
+                console.log('win');
             }
         };
     }

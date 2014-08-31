@@ -59,6 +59,7 @@ define(['phaser', 'util', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs
         p2Hud.onMarblePop.add(this.marblePop.bind(this, MarbleMatch.Player.TWO));
         this.hud[MarbleMatch.Player.TWO] = p2Hud;
 
+        this.onPlayerScored = new Phaser.Signal();
         this.onMatchEnd = new Phaser.Signal();
     }
     
@@ -110,6 +111,8 @@ define(['phaser', 'util', 'prefabs/marble_group', 'prefabs/marble_hud', 'prefabs
     
     MarbleMatch.prototype.marbleMatched = function(player, color, count, streak) {
 
+        this.onPlayerScored.dispatch(player, color, count, streak);
+        
         if (Util.Config.options.env === 'development') {
             this.marbleFull(player);
             return;
