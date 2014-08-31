@@ -199,32 +199,57 @@ define(['phaser',
         },
 
         handleSwipe: function(e, prevPos, pos, direction) {
-            var marbleInputDirection = MarbleGroup.Input.LEFT;
-
             switch(direction) {
             case Gesture.SwipeDirection.UP:
-                marbleInputDirection = MarbleGroup.Input.UP;
+                direction = MarbleGroup.Input.UP;
                 break;
             case Gesture.SwipeDirection.DOWN:
-                marbleInputDirection = MarbleGroup.Input.DOWN;
+                direction = MarbleGroup.Input.DOWN;
                 break;
             case Gesture.SwipeDirection.LEFT:
-                marbleInputDirection = MarbleGroup.Input.LEFT;
+                direction = MarbleGroup.Input.LEFT;
                 break;
             case Gesture.SwipeDirection.RIGHT:
-                marbleInputDirection = MarbleGroup.Input.RIGHT;
+                direction = MarbleGroup.Input.RIGHT;
                 break;
             }
-            
-            this.handleInput(MarbleMatch.Player.ONE, marbleInputDirection);
+
+
+            if (this.roundState === LevelRoundState.States.ROUND_END) {
+                this.roundState = LevelRoundState.States.OUTRO;
+                this.roundEnd(this.roundWinner);
+            } else if (this.roundState === LevelRoundState.States.PLAYING) {
+                this.match.handleInput(MarbleMatch.Player.ONE, direction);
+            } else if (this.roundState === LevelRoundState.States.PAUSED) {
+                this.pauseMenu.handleInput(direction);
+                this.pauseMenu.playSoundNavigate();
+            }
         },
 
         handleTap: function(e, pos) {
-            this.handleInput(MarbleMatch.Player.ONE, MarbleGroup.Input.SHIFT);
+            var direction = MarbleGroup.Input.SHIFT;
+            
+            if (this.roundState === LevelRoundState.States.ROUND_END) {
+                this.roundState = LevelRoundState.States.OUTRO;
+                this.roundEnd(this.roundWinner);
+            } else if (this.roundState === LevelRoundState.States.PLAYING) {
+                this.match.handleInput(MarbleMatch.Player.ONE, direction);
+            } else if (this.roundState === LevelRoundState.States.PAUSED) {
+                this.pauseMenu.tap(pos);
+                this.pauseMenu.playSoundNavigate();
+            }
         },
 
         handleHold: function(e, pos) {
-            this.handlePause();
+            if (this.roundState === LevelRoundState.States.PLAYING) {
+                this.handlePause();
+            } else if (this.roundState === LevelRoundState.States.PAUSED) {
+                if (this.pauseMenu.tap(pos) != -1) {
+                    this.handleEnter();
+                } else {
+                    this.handlePause();
+                }
+            }
         },
         
         nextRound: function(outroAnimation) {

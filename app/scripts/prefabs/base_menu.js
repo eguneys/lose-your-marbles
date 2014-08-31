@@ -70,9 +70,11 @@ define(['phaser', 'prefabs/toggle_sprite'], function(Phaser, ToggleSprite) {
             var itemIdx = this.menuItems.indexOf(items[0]);
             
             this.makeSelection(itemIdx);
+
+            return this.menuIdx;
         }
 
-        return this.menuIdx;
+        return -1;
     };
 
     return Menu;
