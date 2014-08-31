@@ -197,7 +197,7 @@ module.exports = function (grunt) {
                             exports: 'Phaser'
                         }
                     },
-                    optimize: 'none',
+                    // optimize: 'none',
                     'include': ['../bower_components/almond/almond', 'lib_main'],
                     'out': 'dist/lib/lym.js',
                     'wrap': {

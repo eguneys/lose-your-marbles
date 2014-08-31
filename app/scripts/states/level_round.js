@@ -5,13 +5,13 @@ define(['phaser',
         'prefabs/round_foreground',
         'prefabs/pause_menu',
         'prefabs/fade_tween',
-        'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai', 'util', 'config'],
+        'prefabs/marble_group', 'prefabs/marble_match', 'bot/bot_ai', 'util/gestures', 'util', 'config'],
        function(Phaser,
                 LevelMasterState,
                 RoundForeground,
                 PauseMenu,
                 FadeTween,
-                MarbleGroup, MarbleMatch, BotAI, Util, Config) {
+                MarbleGroup, MarbleMatch, BotAI, Gesture, Util, Config) {
     function LevelRoundState() {}
 
     LevelRoundState.States = {
@@ -79,9 +79,11 @@ define(['phaser',
             
             this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
             this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+
+            this.gesture = new Gesture(this.game);
             
             this.botAI = new BotAI();
-            this.botAI2 = new BotAI();
+            //this.botAI2 = new BotAI();
 
             this.roundStart();
         },
@@ -89,8 +91,10 @@ define(['phaser',
         update: function() {
             if (this.roundState === LevelRoundState.States.PLAYING) {
                 this.botAI.update(this.match.queryGameState(MarbleMatch.Player.TWO));
-                this.botAI2.update(this.match.queryGameState(MarbleMatch.Player.ONE));
+                //this.botAI2.update(this.match.queryGameState(MarbleMatch.Player.ONE));
             }
+
+            this.gesture.update();
         },
         
         roundStart: function() {
@@ -142,6 +146,10 @@ define(['phaser',
 
             this.enterKey.onDown.add(this.handleEnter, this);
             this.escKey.onDown.add(this.handlePause, this);
+
+            this.gesture.onSwipe.add(this.handleSwipe, this);
+            this.gesture.onTap.add(this.handleTap, this);
+            this.gesture.onHold.add(this.handleHold, this);
             
             // this.botAI2.upPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.UP));
             // this.botAI2.downPress.add(this.match.handleInput.bind(this.match, MarbleMatch.Player.ONE, MarbleGroup.Input.DOWN));
@@ -188,6 +196,35 @@ define(['phaser',
             } else if (this.roundState !== LevelRoundState.States.PAUSED_TRANSITION) {
                 this.roundPause();
             }
+        },
+
+        handleSwipe: function(e, prevPos, pos, direction) {
+            var marbleInputDirection = MarbleGroup.Input.LEFT;
+
+            switch(direction) {
+            case Gesture.SwipeDirection.UP:
+                marbleInputDirection = MarbleGroup.Input.UP;
+                break;
+            case Gesture.SwipeDirection.DOWN:
+                marbleInputDirection = MarbleGroup.Input.DOWN;
+                break;
+            case Gesture.SwipeDirection.LEFT:
+                marbleInputDirection = MarbleGroup.Input.LEFT;
+                break;
+            case Gesture.SwipeDirection.RIGHT:
+                marbleInputDirection = MarbleGroup.Input.RIGHT;
+                break;
+            }
+            
+            this.handleInput(MarbleMatch.Player.ONE, marbleInputDirection);
+        },
+
+        handleTap: function(e, pos) {
+            this.handleInput(MarbleMatch.Player.ONE, MarbleGroup.Input.SHIFT);
+        },
+
+        handleHold: function(e, pos) {
+            this.handlePause();
         },
         
         nextRound: function(outroAnimation) {

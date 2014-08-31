@@ -6,6 +6,7 @@ define(['phaser',
         'prefabs/pause_menu',
         'prefabs/fade_tween',
         'prefabs/marble_group',
+        'util/gestures',
         'util'],
        function(Phaser,
                 LevelMasterState,
@@ -13,6 +14,7 @@ define(['phaser',
                 PauseMenu,
                 FadeTween,
                 MarbleGroup,
+                Gesture,
                 Util) {
     function LevelBaseRoundState() {}
 
@@ -58,6 +60,8 @@ define(['phaser',
             
             this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
             this.escKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+
+            this.gestures = new Gesture(this.game);
         },
 
         update: function() {
@@ -104,6 +108,8 @@ define(['phaser',
             
             this.enterKey.onDown.add(this.handleEnter, this);
             this.escKey.onDown.add(this.handlePause, this);
+
+            this.gestures.onHold.add(this.handlePause, this);
         },
 
         handleInput: function(direction) {

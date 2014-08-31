@@ -1,6 +1,6 @@
 'use strict';
 
-define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_foreground', 'prefabs/skill_menu', 'util'], function(Phaser, LevelMasterState, FadeTween, LevelSplash, LevelForeground, SkillMenu, Util) {
+define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_splash', 'prefabs/level_foreground', 'prefabs/skill_menu', 'util/gestures', 'util'], function(Phaser, LevelMasterState, FadeTween, LevelSplash, LevelForeground, SkillMenu, Gesture, Util) {
     function LevelIntroState() {}
 
     LevelIntroState.prototype = {
@@ -51,8 +51,16 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
                 this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
                 this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
                 this.spacebarKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+                this.gestures = new Gesture(this.game);
             } else {
                 tweenIntro.onComplete.add(this.levelStart, this);
+            }
+        },
+
+        update: function() {
+            if (this.gestures) {
+                this.gestures.update();
             }
         },
 
@@ -67,7 +75,31 @@ define(['phaser', 'states/level_master', 'prefabs/fade_tween', 'prefabs/level_sp
             this.downKey.onDown.add(this.skillMenuNavigate.bind(this, SkillMenu.Select.DOWN));
             this.enterKey.onDown.add(this.skillMenu.select, this.skillMenu);
             this.spacebarKey.onDown.add(this.skillMenu.select, this.skillMenu);
-            
+
+            this.gestures.onSwipe.add(this.handleSwipe, this);
+            this.gestures.onTap.add(this.handleTap, this);
+            this.gestures.onHold.add(this.handleHold, this);
+        },
+
+        handleSwipe: function(e, pos, prev, direction) {
+            switch(direction) {
+            case Gesture.SwipeDirection.UP:
+            case Gesture.SwipeDirection.LEFT:
+                this.skillMenuNavigate(SkillMenu.Select.UP);
+                break;
+            default:
+                this.skillMenuNavigate(SkillMenu.Select.DOWN);
+                break;
+            }
+        },
+
+        handleTap: function(e, pos) {
+            this.skillMenu.tap(pos);
+        },
+
+        handleHold: function(e, pos) {
+            this.skillMenu.tap(pos);
+            this.skillMenu.select();  
         },
 
         skillMenuNavigate: function(direction) {

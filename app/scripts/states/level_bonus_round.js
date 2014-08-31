@@ -1,7 +1,7 @@
 'use strict';
 
-define(['phaser', 'states/level_master', 'states/level_base_round', 'prefabs/marble_group', 'prefabs/marble_bonus_match', 'prefabs/level_splash'],
-       function(Phaser, LevelMasterState, LevelBaseRoundState, MarbleGroup, MarbleBonusMatch, LevelSplash) {
+define(['phaser', 'states/level_master', 'states/level_base_round', 'prefabs/marble_group', 'prefabs/marble_bonus_match', 'prefabs/level_splash', 'util/gestures'],
+       function(Phaser, LevelMasterState, LevelBaseRoundState, MarbleGroup, MarbleBonusMatch, LevelSplash, Gesture) {
     
     function LevelBonusRoundState() {
         LevelBaseRoundState.call(this);
@@ -57,6 +57,9 @@ define(['phaser', 'states/level_master', 'states/level_base_round', 'prefabs/mar
             .add(this.handleInput.bind(this, MarbleGroup.Input.RIGHT));
         this.shiftKey.onDown
             .add(this.handleInput.bind(this, MarbleGroup.Input.SHIFT));
+
+        this.gestures.onSwipe.add(this.handleSwipe, this);
+        this.gestures.onTap.add(this.handleInput.bind(this, MarbleGroup.Input.SHIFT));
     };
 
     LevelBonusRoundState.prototype.handleInput = function(direction) {
@@ -67,10 +70,38 @@ define(['phaser', 'states/level_master', 'states/level_base_round', 'prefabs/mar
         }
     };
 
+
+    LevelBonusRoundState.prototype.handleSwipe = function(e, prevPos, pos, direction) {
+
+        switch(direction) {
+        case Gesture.SwipeDirection.UP:
+            direction = MarbleGroup.Input.UP;
+            break;
+        case Gesture.SwipeDirection.DOWN:
+            direction = MarbleGroup.Input.DOWN;
+            break;
+        case Gesture.SwipeDirection.LEFT:
+            direction = MarbleGroup.Input.LEFT;
+            break;
+        case Gesture.SwipeDirection.RIGHT:
+            direction = MarbleGroup.Input.RIGHT;
+            break;
+        }
+        
+        LevelBaseRoundState.prototype.handleInput.call(this, direction);
+
+        if (this.roundState === LevelBaseRoundState.States.PLAYING) {
+            this.bonusMatch.handleInput(direction);
+        }
+    };
+
+           
     LevelBonusRoundState.prototype.update = function() {
         if (this.roundState === LevelBaseRoundState.States.PLAYING) {
             this.bonusMatch.updateTimer();
         }
+
+        this.gestures.update();
     };
 
     LevelBonusRoundState.prototype.tweenIntro = function() {

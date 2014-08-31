@@ -58,6 +58,14 @@ define(['phaser', 'util', 'prefabs/red_marble', 'prefabs/skill_digit'], function
         DOWN: 1
     };
 
+    SkillMenu.prototype.makeSelection = function(newIdx) {
+        if (newIdx !== this.menuIdx) {
+            this.menuIdx = newIdx;
+
+            this.redMarble.y = this.menuItems[this.menuIdx].y - 10;
+        }
+    };
+
     SkillMenu.prototype.navigate = function(direction) {
         if (!this.allowSelect) { return -1; }
         
@@ -72,15 +80,26 @@ define(['phaser', 'util', 'prefabs/red_marble', 'prefabs/skill_digit'], function
             break;
         }
 
-        if (newIdx !== this.menuIdx) {
-            this.menuIdx = newIdx;
-
-            this.redMarble.y = this.menuItems[this.menuIdx].y - 10;
-        }
-
+        this.makeSelection(newIdx);
+        
         return this.menuIdx;
     };
+    
+    SkillMenu.prototype.tap = function(pos) {
+        var items = this.menuItems.filter(function(item) {
+            if (Phaser.Rectangle.containsPoint(item.getBounds(), pos)) {
+                return true;
+            }
+            return false;
+        });
 
+        if (items.length > 0) {
+            var itemIdx = this.menuItems.indexOf(items[0]);
+
+            this.makeSelection(itemIdx);
+        }
+    };
+    
     SkillMenu.prototype.select = function() {
         if (!this.allowSelect) { return -1; }
         this.allowSelect = false;

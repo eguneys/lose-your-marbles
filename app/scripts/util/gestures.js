@@ -29,7 +29,10 @@ define(['phaser'], function(Phaser) {
             this.swipeDispatched = false;
         } else if (!this.swipeDispatched && distance > 150 &&  duration > 100 && duration < Gesture.TIMES.SWIPE) {
             var positionDown = this.game.input.activePointer.positionDown;
-            this.onSwipe.dispatch(this, positionDown);
+            var position = this.game.input.activePointer.position;
+            var swapDirection = this.getSwipeDirection(position, positionDown);
+            
+            this.onSwipe.dispatch(this, positionDown, position, swapDirection);
 
             this.swipeDispatched = true;
         }
@@ -65,6 +68,25 @@ define(['phaser'], function(Phaser) {
             this.isHolding = false;
         }
     };
+
+    Gesture.prototype.getSwipeDirection = function(pos, prevPos) {
+        var xDiff = pos.x - prevPos.x;
+        var yDiff = pos.y - prevPos.y;
+
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            if (xDiff < 0) {
+                return Gesture.SwipeDirection.LEFT;
+            } else {
+                return Gesture.SwipeDirection.RIGHT;
+            }
+        } else {
+            if (yDiff < 0) {
+                return Gesture.SwipeDirection.UP;
+            } else {
+                return Gesture.SwipeDirection.DOWN;
+            }
+        }
+    };
     
     Gesture.SWIPE = 0;
     Gesture.TAP = 1;
@@ -73,6 +95,13 @@ define(['phaser'], function(Phaser) {
     Gesture.TIMES = {
         HOLD: 150,
         SWIPE: 250
+    };
+
+    Gesture.SwipeDirection = {
+        UP: 1,
+        DOWN: 2,
+        LEFT: 3,
+        RIGHT: 4
     };
 
     return Gesture;
