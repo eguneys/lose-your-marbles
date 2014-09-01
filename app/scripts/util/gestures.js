@@ -13,7 +13,6 @@ define(['phaser'], function(Phaser) {
         this.onSwipe = new Phaser.Signal();
         this.onTap = new Phaser.Signal();
         this.onHold = new Phaser.Signal();
-
     }
 
     Gesture.prototype.update = function() {
@@ -25,9 +24,10 @@ define(['phaser'], function(Phaser) {
     };
 
     Gesture.prototype.updateSwipe = function(distance, duration) {
-        if (duration === -1) {
+        var velocity = distance / duration;
+        if (velocity < 0) {
             this.swipeDispatched = false;
-        } else if (!this.swipeDispatched && distance > 150 &&  duration > 100 && duration < Gesture.TIMES.SWIPE) {
+        } else if (!this.swipeDispatched && distance > Gesture.SwipeDefaults.threshold &&  velocity > Gesture.SwipeDefaults.velocity) {
             var positionDown = this.game.input.activePointer.positionDown;
             var position = this.game.input.activePointer.position;
             var swapDirection = this.getSwipeDirection(position, positionDown);
@@ -41,7 +41,7 @@ define(['phaser'], function(Phaser) {
     Gesture.prototype.updateTouch = function(distance, duration) {
         var positionDown = this.game.input.activePointer.positionDown;
 
-        if (duration === -1) {
+        if (duration < 0) {
             if (this.isTouching) {
                 this.onTap.dispatch(this, positionDown);
             }
@@ -50,8 +50,8 @@ define(['phaser'], function(Phaser) {
             this.isHolding = false;
             this.holdDispatched = false;
             
-        } else if (distance < 10) {
-            if (duration < Gesture.TIMES.HOLD) {
+        } else if (distance < Gesture.SwipeDefaults.threshold) {
+            if (duration < Gesture.HoldDefaults.time) {
                 this.isTouching = true;
             } else {
                 this.isTouching = false;
@@ -92,9 +92,13 @@ define(['phaser'], function(Phaser) {
     Gesture.TAP = 1;
     Gesture.HOLD = 2;
 
-    Gesture.TIMES = {
-        HOLD: 150,
-        SWIPE: 250
+    Gesture.HoldDefaults = {
+        time: 200
+    };
+
+    Gesture.SwipeDefaults = {
+        velocity: 0.65,
+        threshold: 10
     };
 
     Gesture.SwipeDirection = {

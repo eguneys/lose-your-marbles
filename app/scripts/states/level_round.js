@@ -214,7 +214,6 @@ define(['phaser',
                 break;
             }
 
-
             if (this.roundState === LevelRoundState.States.ROUND_END) {
                 this.roundState = LevelRoundState.States.OUTRO;
                 this.roundEnd(this.roundWinner);

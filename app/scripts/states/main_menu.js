@@ -55,6 +55,7 @@ define(['phaser', 'config', 'util/gestures', 'prefabs/base_menu', 'prefabs/main_
 
             this.gesture.onTap.add(this.tapped, this);
             this.gesture.onHold.add(this.holded, this);
+            this.gesture.onSwipe.add(this.swiped, this);
             
             this.menuState = MainMenuState.States.MAIN;
         },
@@ -83,6 +84,25 @@ define(['phaser', 'config', 'util/gestures', 'prefabs/base_menu', 'prefabs/main_
                     this.optionsMenuSelect();
                 }
             }
+        },
+
+        swiped: function(e, prev, pos, direction) {
+            switch(direction) {
+            case Gesture.SwipeDirection.UP:
+                direction = BaseMenu.Select.UP;
+                break;
+            case Gesture.SwipeDirection.DOWN:
+                direction = BaseMenu.Select.DOWN;
+                break;
+            case Gesture.SwipeDirection.LEFT:
+                direction = BaseMenu.Select.LEFT;
+                break;
+            case Gesture.SwipeDirection.RIGHT:
+                direction = BaseMenu.Select.RIGHT;
+                break;
+            }
+
+            this.keyPress(direction);
         },
 
         keyPress: function(key) {
